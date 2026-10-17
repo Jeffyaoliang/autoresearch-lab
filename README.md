@@ -1,2 +1,74 @@
-# autoresearch-lab
-Durable autonomous research agents: execution, evaluation, and agent-native infrastructure.
+# AutoResearch Lab
+
+**面向长时程自主科研 Agent 的持久执行、过程评测与 Agent-native 计算基础设施。**
+
+> Durable autonomous research agents: execution, evaluation, and agent-native infrastructure.
+
+**项目状态：早期研究 / Private。** 当前仓库首先整理研究问题、已验证证据的范围与研究路线；不代表已发布完整可复现系统或公开数据集。
+
+## 为什么做这个项目？
+
+让研究 Agent 在明确目标和有限算力预算内，自主完成「提出实验 → 修改代码 → 运行计算 → 观察结果 → 修复错误 → 继续研究」，并且在网络中断、GPU 容器更换、部分执行失败后保留可恢复的科研状态。
+
+现有平台通常以人工登录、终端交互和短时计算任务为中心。Agent 则需要长期任务语义、稳定的资源发现、权限内的自主执行、持久状态及过程级评价。这里的挑战既包括 Agent 的研究能力，也包括环境本身的可靠性。
+
+## 三条相互支撑的研究线
+
+| 研究线 | 核心问题 | 当前定位 |
+| --- | --- | --- |
+| **Research Runtime** | 如何让 Agent 安全、持续、可恢复地使用 GPU 开展实验？ | 有私有原型与部分真实端到端验收 |
+| **Research Evaluation** | 如何区分科研决策失败、工程执行失败和环境故障？ | 研究提案；尚无公开 Benchmark |
+| **Agent-native Infrastructure** | 哪些 Agent 工作负载特性要求新的系统/资源管理机制？ | 长期研究方向；尚未验证软硬件创新假设 |
+
+## 已有实践与证据边界（截至 2026-10-17）
+
+在一个私有 GPU 研究环境中，已探索：
+
+- **ResourceProbe**：受限 Agent 通过持久化请求队列，由正常执行环境的只读服务采集 GPU 资源信息，再返回结构化证据。一次真实端到端请求完成并更新资源绑定；这不等于所有平台配额数据均可读取。
+- **Campaign-level Authorization**：将科研目标、资源上限和停止条件作为一次性授权边界；已通过相关回归测试，但不代表真实长周期自治训练已完成验收。
+- **Durable Execution**：持久化任务、预算、会话及 checkpoint，探索跨进程与跨容器恢复；不同恢复路径的验证程度并不相同。
+- **GPU Training**：有历史 GPU smoke / checkpoint 恢复实践；新一轮四卡 micro32 Engineering Campaign 截至该日期仍受个人存储配额问题阻塞，**尚未完成**。
+
+以上基于内部运行报告整理。原始数据、权限、平台身份与内部科研资产未在本仓库公开。当前不把它们写成公开可独立复现的实验结论。
+
+## Eval 研究设想
+
+传统 AutoResearch Eval 往往强调最终分数，而长时程 Agent 还会受到环境中断、资源不足、错误重试、日志不完整等影响。
+
+我们计划提出可复核的过程级评测问题：
+
+1. 一个失败究竟源于科学假设、Agent 决策、工程代码、外部环境，还是不可判定？
+2. 在相同计算预算和任务限制下，Agent 能完成多少**有效科研进展**？
+3. 系统可恢复性提升是否能转化为更高的完成率，而不只是更长的存活时间？
+4. 如何用可审计的事件轨迹、受控故障注入与最终结果联合评价？
+
+参见 [研究简介](docs/research-brief.md)、[评测计划](docs/evaluation-plan.md) 和 [系统状态](docs/system-status.md)。
+
+## 拟定结构
+
+```text
+autoresearch-lab/
+├── docs/              # Research Brief、架构与 Eval 计划
+├── schemas/           # 研究轨迹的数据结构（草案）
+├── examples/          # 未来加入脱敏或合成可复现案例
+├── runtime/           # 未来经审计迁入的执行层
+└── evaluation/        # 未来的指标与评测工具
+```
+
+**注意：目录规划不代表已有完整实现。** 当前先以文档和 schema 为主，避免为展示仓库重写已在私有环境运行的系统。
+
+## 近期路线
+
+- [x] 整理研究定位与实际系统边界
+- [x] 给出过程级 Eval 研究计划
+- [ ] 在符合数据授权和脱敏要求后发布可复核案例
+- [ ] 发布最小可运行的 Mock Campaign / Trace Replay
+- [ ] 形成可靠失败归因标注规则与评测基线
+- [ ] 验证长时程 GPU Campaign 及跨容器恢复
+- [ ] 基于真实工作负载评估 Agent-native 系统机制
+
+## 数据、隐私与开源
+
+当前仓库默认 **Private**。不会直接提交 Codex 会话、API 凭据、云平台账户信息、原始运行日志、私有模型和训练数据。任何公开发布均需先进行数据权属检查、脱敏、独立复现与许可证审查。
+
+本仓库目前主要是 **research-in-progress**，欢迎后续在合适的范围内交流科研问题与合作。
