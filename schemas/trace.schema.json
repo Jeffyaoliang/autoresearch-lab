@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AutoResearch Event Trace (draft)",
+  "description": "A minimal, provider-agnostic research event schema; no secrets or raw conversations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "experiment_id",
+    "attempt_id",
+    "event_id",
+    "event_type",
+    "timestamp",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "experiment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_type": {
+      "enum": [
+        "plan",
+        "tool_call",
+        "resource_snapshot",
+        "gpu_job",
+        "checkpoint",
+        "evaluation",
+        "decision",
+        "failure",
+        "recovery"
+      ]
+    },
+    "status": {
+      "enum": [
+        "started",
+        "completed",
+        "failed",
+        "blocked",
+        "unknown"
+      ]
+    },
+    "failure_category": {
+      "enum": [
+        "scientific",
+        "engineering",
+        "environment",
+        "mixed",
+        "unknown"
+      ]
+    },
+    "evidence_uri": {
+      "type": "string",
+      "description": "Non-sensitive relative reference only; avoid credentials and private URLs"
+    },
+    "budget_gpu_hours_used": {
+      "type": "number",
+      "minimum": 0
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 2000
+    }
+  }
+}
