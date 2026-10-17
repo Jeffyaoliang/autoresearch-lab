@@ -1,0 +1,35 @@
+# Credentials and environment
+.env
+.env.*
+!.env.example
+*auth.json
+*credentials*
+*.pem
+*.key
+
+# Raw agent conversations and local runtime state
+.codex/
+.claude/
+runtime/
+codex-persistence/
+sessions/
+checkpoints/
+outputs/
+logs/
+*.sqlite
+*.sqlite-*
+
+# Large/private data
+data/private/
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+*.bin
+
+# Python/editor
+__pycache__/
+.pytest_cache/
+.venv/
+.DS_Store
+.vscode/
