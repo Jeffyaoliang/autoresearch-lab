@@ -30,6 +30,18 @@ uv run --no-editable pytest -q
 
 建议投递的“已收到”表示消息进入指定会话上下文。模型是否运行、实验是否执行，是独立的结果。当前 MCP 不提供实验执行工具；独立 executor 的非文本实验入口仍保留原型的禁用门槛。
 
+## ChatGPT 与服务器 Codex
+
+本版包含 ChatGPT 经 MCP 向服务器上固定 Codex 会话投递指导文本的核心代码，以及状态读取和投递回执查询：
+
+- `submit_research_guidance(request_id, message)`：写入远端私有收件箱，由驻留 worker 通过 `thread/inject_items` 注入绑定会话的上下文。
+- `get_research_guidance_status(request_id)`：区分排队、投递不确定、已进入会话上下文。
+- `list_research_tasks()` 与 `get_research_progress()`：读取经过筛选的平台状态与研究记录。
+
+这些工具由 `research-hub stdio` 提供。`research-hub http` 启动的是另一份只读 Bridge，不包含指导投递工具；本版没有打包可供 ChatGPT 直接连接的公网 MCP 入口、TLS relay 或连接器安装流程。仍需部署远端包与 worker、填写私有配置，并接入现有或单独配置的远程 MCP 入口。
+
+投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。整理版只完成离线验证，尚未重新部署做线上端到端验收。配置和边界见[指导与进度](docs/components-guidance.md)。
+
 ## 目录
 
 ```text
@@ -79,4 +91,12 @@ CI 定义了 Python 3.11 / 3.12 的离线检查。跨平台服务部署、真实
 
 ## 共享范围
 
-当前仓库保持 Private，尚未选定公开发行许可证。代码整理保留了通用实现与合成测试；部署凭证、现场配置、原始会话、运行快照、checkpoint 及试验数据留在原部署环境。后续共享可从可复现的小案例和过程轨迹格式开始。
+当前仓库保持 Private。代码整理保留了通用实现与合成测试；部署凭证、现场配置、原始会话、运行快照、checkpoint 及试验数据留在原部署环境。后续共享可从可复现的小案例和过程轨迹格式开始。
+
+## 许可证
+
+Copyright (c) 2026 Yaoliang Bian.
+
+除另有说明外，本项目采用 **GNU Affero General Public License version 3 only**（SPDX：`AGPL-3.0-only`），完整条款见 [LICENSE](LICENSE)。第三方组件仍遵循各自的许可证。
+
+许可证允许符合条款的商业使用，不要求向作者支付许可费或分成。分发受覆盖的软件、或让用户通过网络与其修改版交互时，需要遵守相应的源码提供义务。不同于本许可证的商业授权须另行书面约定。

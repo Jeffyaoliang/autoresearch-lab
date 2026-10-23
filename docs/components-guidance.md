@@ -4,6 +4,8 @@ These modules were extracted from the working Research Hub integration. Importin
 
 ## Advisory delivery
 
+The four cloud-facing tools (`list_research_tasks`, `get_research_progress`, `submit_research_guidance`, and `get_research_guidance_status`) are exposed by `research-hub stdio`. The `research-hub http` command serves a different, read-only Bridge and does not expose advisory submission. A ChatGPT deployment still needs an appropriately authenticated remote MCP entry point forwarding to the stdio adapter, plus the configured remote package and worker. Deployment-only TLS relays and connector installers are not included, and the extracted package has not been revalidated end to end against the existing live connection.
+
 `guidance.queue.GuidanceQueue(root, binding_alias)` creates immutable, idempotent mailbox requests. Its receipt explicitly says the model has not received the request. `guidance.delivery.Delivery(root, proxy, binding)` claims a request durably before calling the official `thread/inject_items` RPC. A claim with no valid receipt means **uncertain delivery: review, do not resend**. A transport timeout cannot determine whether the server applied the request. Claims do not expire automatically.
 
 Successful injection means text was added to the bound thread context. It does not mean the model read the message, started a turn, or executed an experiment. Neither the endpoint nor the RPC allowlist exposes `turn/start`, arbitrary Shell commands, or caller-selected threads.
