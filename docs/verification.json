@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-23",
+  "python": "3.12.13",
+  "tests": {
+    "passed": 206,
+    "subtests_passed": 35,
+    "failed": 0,
+    "warnings": 1,
+    "warning_note": "Starlette TestClient warns that its httpx backend is deprecated; the actual in-process HTTP handshake succeeds."
+  },
+  "checks": {
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "wheel_build": "passed",
+    "isolated_installed_demo": "passed",
+    "real_stdio_handshake": "passed",
+    "in_process_http_handshake": "passed",
+    "known_deployment_identifier_scan": "passed"
+  },
+  "independent_review": {
+    "code_blockers": 0,
+    "import_side_effect_checks": "passed",
+    "note": "No before-migration complete source hash baseline was available."
+  },
+  "scope": {
+    "platform_operations_executed": false,
+    "production_deployment_switched": false,
+    "gpu_campaign_verified": false
+  }
+}

@@ -33,3 +33,22 @@ __pycache__/
 .venv/
 .DS_Store
 .vscode/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Deployment configuration and generated state stay outside source control.
+*.private.json
+http-token.txt
+collector-state.json
+bridge.json
+remote.json
+progress.json
+executor.json
+acceptance.json
+ledger.json
+copy-ledger.json
+state/

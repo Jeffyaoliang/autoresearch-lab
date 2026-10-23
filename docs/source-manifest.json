@@ -1,0 +1,225 @@
+{
+  "date": "2026-10-23",
+  "source_group": "Research Agent Hub private prototype",
+  "note": "Hashes identify the source snapshots read for extraction, not a production migration or proof of prior source-directory integrity. Deployment paths and live records are intentionally excluded.",
+  "modules": [
+    {
+      "destination": "src/research_hub/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "59b97a07a0b8b1af7e5093b18689f4c9ba3afe78bf23089e3f0c06f14633e646"
+    },
+    {
+      "destination": "src/research_hub/__main__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "destination": "src/research_hub/acceptance/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "2e46127e85fa0ccd4cf834e7b3c0ec10563645c777cc5110f57ac5daafd90d08"
+    },
+    {
+      "destination": "src/research_hub/acceptance/channel.py",
+      "kind": "refactored",
+      "source": "Acceptance Channel/acceptance_channel.py",
+      "source_sha256": "d4b3eaad9c1af7e68062eb9b257d12030810a6528b8fa95422af47754cce9329",
+      "destination_sha256": "39c108f9f0b45303a44d1c3771d72541ffd8862b2fb3df40127e24ccf6ba2cd6"
+    },
+    {
+      "destination": "src/research_hub/acceptance/events.py",
+      "kind": "refactored",
+      "source": "Acceptance Channel/acceptance_events.py",
+      "source_sha256": "28c8328fd0ab8d122a42190af4fa1cc8ea6c369caf40e6ec578ddef6dcbc7239",
+      "destination_sha256": "fc4c74a8c3b7158bd63748885e6dce705ccebe01c3bb89cd0d6f47d884e723a4"
+    },
+    {
+      "destination": "src/research_hub/acceptance/policy.py",
+      "kind": "refactored",
+      "source": "Acceptance Channel/acceptance_policy.py",
+      "source_sha256": "6d0bff295e0470173fc6eff2b2fdd9112ce6635920bcdf14f2e7d37260f922db",
+      "destination_sha256": "8c49b61d8651341f8f7443b1bab247ce328e389c64a9d3b42a13a39214d6293a"
+    },
+    {
+      "destination": "src/research_hub/acceptance/store.py",
+      "kind": "refactored",
+      "source": "Acceptance Channel/acceptance_store.py",
+      "source_sha256": "c776d30566e1fae10f08025f06593a6814ed56bbdcaa48660c29c1af72be6cc1",
+      "destination_sha256": "07e6a04ed980fc85c3380242fb71fb2f3e3bd391ef3765e4cff49aa8856be07a"
+    },
+    {
+      "destination": "src/research_hub/acceptance/wire.py",
+      "kind": "refactored",
+      "source": "Acceptance Channel/acceptance_wire.py",
+      "source_sha256": "1ed8570c1b46b55514746141899598ac4460a8bbb358ea06b167c2e42d5d0f88",
+      "destination_sha256": "7abc229b7b8dcacc566a8b5dffeb5157681e27f8505bbcdbf4f121170b1888a3"
+    },
+    {
+      "destination": "src/research_hub/bridge.py",
+      "kind": "refactored",
+      "source": "bridge.py",
+      "source_sha256": "f77818a8cf6878e93d3e19c9cc01e7eee075626a5c66cbb5532a86fc474fccd4",
+      "destination_sha256": "faf6146203ae56c6671126eadea8989b382f1044eaf28af5a639fb52696e9418"
+    },
+    {
+      "destination": "src/research_hub/cli.py",
+      "kind": "new_package_support",
+      "destination_sha256": "b1e0972315705c682a7e0f64cae9f78cfb643d940f9883bcbb563f8558fda67d"
+    },
+    {
+      "destination": "src/research_hub/config.py",
+      "kind": "new_package_support",
+      "destination_sha256": "8bb1211872f10f655b69b7c8590044d8c1b5de6617441f6244dac19f396340c7"
+    },
+    {
+      "destination": "src/research_hub/executor/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "eb4ebf4dfc8638da8df10dc42c8075b18258a5240d849bba71618ddcc019c327"
+    },
+    {
+      "destination": "src/research_hub/executor/client.py",
+      "kind": "refactored",
+      "source": "Research Executor/executor_client.py",
+      "source_sha256": "e62610a26f77afc42639fe44355d77f2ab17201855f6cd065f7e10bb0df0ec43",
+      "destination_sha256": "aa22afbae29212f3073e65e6684d28e8e0bcc9447ecb2d175a95069c8b5927a3"
+    },
+    {
+      "destination": "src/research_hub/executor/core.py",
+      "kind": "refactored",
+      "source": "Research Executor/research_executor.py",
+      "source_sha256": "05cc2e2c19fbe9e1179acf17fecc23abb0ff60207d7b74363b25188d290cf87e",
+      "destination_sha256": "fdd6b3820de30a0e8df69b9b8240970aa6e8a445e04f64cce8c765e427e06fda"
+    },
+    {
+      "destination": "src/research_hub/executor/policy.py",
+      "kind": "refactored",
+      "source": "Research Executor/executor_policy.py",
+      "source_sha256": "bd409006a62562a7697fcea0471983242cc552af1a4f5e7031c8fa289aa2f411",
+      "destination_sha256": "7b78906a44dfce28014c24132049c74515adb105b03231da6e5726ce284420f8"
+    },
+    {
+      "destination": "src/research_hub/executor/rpc.py",
+      "kind": "refactored",
+      "source": "Research Executor/executor_rpc.py",
+      "source_sha256": "ddc635491df2a81c014dc6e66fffa633ce7eb2975e75391b30d27441a52fb529",
+      "destination_sha256": "f33e26147ba6a368e8f8627d79cc980a6aeb49a96bbf6e9e3be19be50b88536a"
+    },
+    {
+      "destination": "src/research_hub/executor/state.py",
+      "kind": "refactored",
+      "source": "Research Executor/executor_state.py",
+      "source_sha256": "23104e186eaf2d16464933fdb85ac6294b391c56ea313ece7aa092b64ef18448",
+      "destination_sha256": "e1bf5c9558a9c62d3e26fa8ffe32d7c8e39a07f224d681419703cb55b8556000"
+    },
+    {
+      "destination": "src/research_hub/guidance/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "9fa6bf6a7751271fd669006ca566482567f27db1355145e4a3f358f506df156b"
+    },
+    {
+      "destination": "src/research_hub/guidance/delivery.py",
+      "kind": "refactored",
+      "source": "guidance_delivery.py",
+      "source_sha256": "d258099d85b5e62dfabf73022f54f48f660d54cc55a44bec43dcaff079b5c835",
+      "destination_sha256": "c3cf991dae44fabd3f2148aaa1e790df134a244a345adaa0ecc0def6829b8739"
+    },
+    {
+      "destination": "src/research_hub/guidance/endpoint.py",
+      "kind": "refactored",
+      "source": "guidance_endpoint.py",
+      "source_sha256": "153558913aab4e64a40219fd7c63028678f12d02cf757e3997d4e87df1890512",
+      "destination_sha256": "7a2c6affcc2984f6423d0a7f29ab22fc6d8a4934b14d42b2c4f71f1e7a6f5c39"
+    },
+    {
+      "destination": "src/research_hub/guidance/queue.py",
+      "kind": "refactored",
+      "source": "guidance_queue.py",
+      "source_sha256": "6aff151daf5ddd4fd2bc4c3e29146db85653735c5ec69a493e8ca314da608703",
+      "destination_sha256": "3075fbe9602bd90015121dcdf5529b4cc65fdd209b4c2e330beabe0435279c03"
+    },
+    {
+      "destination": "src/research_hub/guidance/rpc.py",
+      "kind": "refactored",
+      "source": "guidance_rpc.py",
+      "source_sha256": "fca853b9fd183e403bcfdf62f406991f0cad5cff8c9c1dad29eaa1655ac99b8a",
+      "destination_sha256": "1cdaafb5588bea36653f467874e36f3afc300a26a0582837b153200417fafdd8"
+    },
+    {
+      "destination": "src/research_hub/guidance/runtime.py",
+      "kind": "refactored",
+      "source": "guidance_runtime.py",
+      "source_sha256": "d88ddc6d5c13ebf78c2e5d9439839ffb05164536e77bcd04ce8b49a8be6a6416",
+      "destination_sha256": "e8ab3163d3b91ea154357ce993df04d88b9bd75216075b5561c47cc07bf78427"
+    },
+    {
+      "destination": "src/research_hub/guidance/transport.py",
+      "kind": "refactored",
+      "source": "guidance_transport.py",
+      "source_sha256": "b87d3c70f0038cc38fec2e5032b35de202226ae9484b8ee60097b9a89433b972",
+      "destination_sha256": "7ea59a11c7f6b917bac93d9ecb5f45dfa5a3e4b7feb8db50f42124bcdcd54706"
+    },
+    {
+      "destination": "src/research_hub/guidance/worker.py",
+      "kind": "refactored",
+      "source": "guidance_worker.py",
+      "source_sha256": "896331942fd6b8c9af2621aad349020b1f0a498d82d2688b68dde5b1898d73da",
+      "destination_sha256": "77efc404ab67aa68aeb5e0d73e7e8b6a1d00071350ddc06924fb20fbab95dfd5"
+    },
+    {
+      "destination": "src/research_hub/mcp_server.py",
+      "kind": "refactored",
+      "source": "chatgpt_snapshot_mcp.py",
+      "source_sha256": "f461b23803813377864d8bc906a2478dec47b3d13b8580c684c8d82a4dd95aca",
+      "destination_sha256": "79fd7ab994f1dc6a5bec5fce18f5d8e728b9e812e0dc5e546813e85bb6e5363c"
+    },
+    {
+      "destination": "src/research_hub/progress/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "682dadef20b1ed7560728a44eb1be4b54375211aef23a3cf1169aa2b4a3a1250"
+    },
+    {
+      "destination": "src/research_hub/progress/projection.py",
+      "kind": "refactored",
+      "source": "research_progress_projection.py",
+      "source_sha256": "a9c27f955a41e0712e08f1efbe17ed13d0097911dcbacd187e94e4106eddc5b9",
+      "destination_sha256": "8cdaf8962802118b163917708a98d65a38b7ecc89070c9b98d429758856e1549"
+    },
+    {
+      "destination": "src/research_hub/progress/reader.py",
+      "kind": "refactored",
+      "source": "research_progress_reader.py",
+      "source_sha256": "16d941bd982cba84ac6ac2974cf55e29a810c9247f0172f2fcad2f823e0dc367",
+      "destination_sha256": "cf8502cf65d6d9f1c5a5bd857bd04256e9d9a8e5b1eb5c26f8a5cd625e540384"
+    },
+    {
+      "destination": "src/research_hub/progress/runtime.py",
+      "kind": "refactored",
+      "source": "research_progress_runtime.py",
+      "source_sha256": "3c08a0d4d7e5d4f8880bfebe94b5ec2f61c77698b44d8695a75dc1b1d041dc51",
+      "destination_sha256": "ee81a0621e180bb811f33447c01877da3c2c110e164c8d7d875c84e4f3b00659"
+    },
+    {
+      "destination": "src/research_hub/renewal/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "1650803f1e2d191d0c9c46d7cfcfba38c41c23be5f5f57dc99a270dab7e46887"
+    },
+    {
+      "destination": "src/research_hub/renewal/copy_guard.py",
+      "kind": "refactored",
+      "source": "Container Renewal/copy_guard.py",
+      "source_sha256": "7398a40a486135281edaf7059ff73f22fa62207f97ce06b91d46da8de45bdbf0",
+      "destination_sha256": "8270a2f89153fd6911acc5cb704363e031a2c4be48a7218a922a18f3a9952c33"
+    },
+    {
+      "destination": "src/research_hub/renewal/renewal_guard.py",
+      "kind": "refactored",
+      "source": "Container Renewal/renewal_guard.py",
+      "source_sha256": "1a475d269f6e33df834384f1ac1e28a7160abb84aff24409ee213ffe7de7b1fd",
+      "destination_sha256": "8de420e8d699bbadd99a4ef373034490010101c49d160039daabd6cee821a231"
+    },
+    {
+      "destination": "src/research_hub/renewal/target.py",
+      "kind": "new_package_support",
+      "destination_sha256": "9480fed3a01950a9718669edbd9808660cd852fe41bff2fb47417b4ba2946aa0"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1.0",
+  "campaign_id": "synthetic-campaign",
+  "experiment_id": "synthetic-experiment",
+  "attempt_id": "attempt-001",
+  "event_id": "event-001",
+  "event_type": "failure",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "status": "blocked",
+  "failure_category": "environment",
+  "evidence_uri": "fixtures/synthetic-disk-full.json",
+  "budget_gpu_hours_used": 0,
+  "notes": "Synthetic example only. No experiment was executed."
+}
