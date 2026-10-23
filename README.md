@@ -2,7 +2,21 @@
 
 面向长时程自主科研 Agent 的持久执行、过程评测与 Agent-native 计算基础设施。
 
+当前落地的 **Research Hub 连接 Mac 上的研究者与 ChatGPT、Windows 上的 MCP 桥接服务，以及商汤 SenseCore 服务器上的 Codex 科研环境**，支持状态查询、研究记录读取和指导消息投递。
+
 **项目状态：早期研究 / Private。** 这里包含从 Research Hub 私有原型整理出的 Python 包、离线测试和研究计划。包内的合成演示与测试用于验证软件行为；真实 GPU Campaign 和科研效果仍需单独验证。
+
+## Mac、Windows 和商汤服务器如何分工
+
+| 位置 | 当前部署中的职责 |
+| --- | --- |
+| **Mac：交互与运维端** | 研究者使用 ChatGPT 讨论研究、查看返回结果，也可通过已有 SSH 连接管理 Windows 上的隧道启动。ChatGPT 的模型和服务端工具调用并不在 Mac 本地运行。 |
+| **Windows：MCP 与平台适配端** | 运行官方 `tunnel-client`、stdio MCP 适配器、本地状态采集与守护，以及已登录的 SCO CLI；校验请求、筛选状态，并通过商汤平台连接远端容器。 |
+| **商汤 SenseCore ACP 的 Linux/GPU 环境：科研端** | 部署 Codex 会话、研究代码与数据，以及私有指导收件箱和 worker；worker 将指导注入固定会话。具备计算环境不代表实验已经启动或完成。 |
+
+日常工具调用从 **ChatGPT 服务端，经 OpenAI 官方 Tunnel 到 Windows 上的 MCP 工具**。任务状态可直接从 Windows 的采集快照读取；研究记录读取和指导投递再通过 Windows 的 SCO CLI 访问商汤容器。因此 Mac 不必作为每次 MCP 调用的网络中转。
+
+原现场另有 **Mac 经 SSH 向 Windows 启动器转送隐藏输入密钥**的辅助路径，它用于启动运维，不承担日常指导消息的投递。这个 Mac 辅助入口尚未收入本整理版；已收录的启动器支持在 Windows 本机隐藏输入或使用进程环境变量。当前 Windows 到商汤容器使用 SCO 平台 CLI，不能把这两段连接都统称为 SSH。完整拓扑和部署步骤见[部署说明](docs/deployment.md)。
 
 ## 快速开始
 
