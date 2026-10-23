@@ -2,11 +2,13 @@
   "date": "2026-10-23",
   "python": "3.12.13",
   "tests": {
-    "passed": 206,
-    "subtests_passed": 35,
+    "passed": 245,
+    "subtests_passed": 42,
     "failed": 0,
     "warnings": 1,
-    "warning_note": "Starlette TestClient warns that its httpx backend is deprecated; the actual in-process HTTP handshake succeeds."
+    "warning_note": "Starlette TestClient warns that its httpx backend is deprecated; the actual in-process HTTP handshake succeeds.",
+    "skipped": 32,
+    "skip_note": "Local Python suite did not enable PowerShell discovery; PowerShell subprocess tests run separately, including three Windows-only task-registration cases in CI."
   },
   "checks": {
     "ruff_check": "passed",
@@ -15,7 +17,12 @@
     "isolated_installed_demo": "passed",
     "real_stdio_handshake": "passed",
     "in_process_http_handshake": "passed",
-    "known_deployment_identifier_scan": "passed"
+    "known_deployment_identifier_scan": "passed",
+    "sdist_build": "passed",
+    "deployment_artifacts": "37 Python modules; 6 Windows scripts in sdist; deployment runbook",
+    "installed_tunnel_preflight": "passed without source/configuration; no files created",
+    "official_tunnel_client_flags": "v0.0.17 local run --help; no control-plane call",
+    "powershell_script_syntax": "passed with PowerShell 7.6.8"
   },
   "independent_review": {
     "code_blockers": 0,
@@ -25,6 +32,7 @@
   "scope": {
     "platform_operations_executed": false,
     "production_deployment_switched": false,
-    "gpu_campaign_verified": false
+    "gpu_campaign_verified": false,
+    "real_tunnel_connection_started": false
   }
 }

@@ -20,10 +20,13 @@
 | `Acceptance Channel/` 的核心模块 | `research_hub.acceptance.*` |
 | `Container Renewal/renewal_guard.py` | `research_hub.renewal.renewal_guard` |
 | `Container Renewal/copy_guard.py` | `research_hub.renewal.copy_guard` |
+| `supervisor.py` | `research_hub.deployment.supervisor` |
+| `connect_secure_tunnel.py` | `research_hub.deployment.tunnel` |
+| Windows 运行环境、客户端安装、任务与启动脚本 | `scripts/windows/` |
 
 后两者承担不同操作：前者续起既有实例，后者在批准范围内从固定模板创建下一代。
 
-没有迁入多版数值动作试验、临时 TLS relay、服务安装器、密钥输入工具、现场 policy/ledger、上传脚本或原始运行记录。它们具有各自的部署绑定和试验背景，直接混入通用包会掩盖实现边界。
+现用官方 MCP Tunnel 的安装、启动和采集守护脚本已参数化后迁入，实际账号、Tunnel ID、会话及密钥仍由部署者在仓库外配置。没有迁入多版数值动作试验、模型执行试验的临时 TLS relay、Mac 经 SSH 转送密钥的现场辅助工具、现场 policy/ledger、上传脚本或原始运行记录。这些文件各有试验背景，不属于通用部署入口。
 
 ## 重要接口变化
 
@@ -34,6 +37,7 @@
 5. executor 通过显式回调接入建议处理；取消了旧版自动寻找或接管进程的行为。非文本实验入口继续关闭。
 6. renewal 的平台 runner 必须由调用方注入；原来会启动现场守护的 wrapper 未迁入。
 7. Windows 的 PTY 依赖按需加载。基础包、合成演示和离线测试可在非 Windows 环境运行。
+8. 采集计划任务与 Tunnel 前台启动分开管理；安装本身不启动 Tunnel。官方 Tunnel 连接 stdio 适配器，不把只读 HTTP 服务作为指导投递入口。
 
 具体配置和局限分别记录在三个组件文档中。
 

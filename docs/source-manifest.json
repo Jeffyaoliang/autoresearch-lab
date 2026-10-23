@@ -63,12 +63,31 @@
     {
       "destination": "src/research_hub/cli.py",
       "kind": "new_package_support",
-      "destination_sha256": "b1e0972315705c682a7e0f64cae9f78cfb643d940f9883bcbb563f8558fda67d"
+      "destination_sha256": "047b904b2a1171925ebf88d82a194e0220a43a65845ef3a45d062bf3d9422527"
     },
     {
       "destination": "src/research_hub/config.py",
       "kind": "new_package_support",
       "destination_sha256": "8bb1211872f10f655b69b7c8590044d8c1b5de6617441f6244dac19f396340c7"
+    },
+    {
+      "destination": "src/research_hub/deployment/__init__.py",
+      "kind": "new_package_support",
+      "destination_sha256": "e42321f5a8b8c668dd0d73e0112029e5d2269f4463b33afe2e079a94f1710a5e"
+    },
+    {
+      "destination": "src/research_hub/deployment/supervisor.py",
+      "kind": "refactored",
+      "source": "supervisor.py",
+      "source_sha256": "362cc0527f042405e1701048ee37fd4c1c1309a794a40fcaf02d6be05e772f61",
+      "destination_sha256": "a817baa34523d8e46720f0c4c6ed515c2cf99bd8341a592a422cbff3905bcd93"
+    },
+    {
+      "destination": "src/research_hub/deployment/tunnel.py",
+      "kind": "refactored",
+      "source": "connect_secure_tunnel.py",
+      "source_sha256": "fb60688a3327b1fd2e4be7b21530bb7af43b3fad69ffb0a38ef0a7fc6df1eb76",
+      "destination_sha256": "f5730363b81fa6f76981dc488c4f8c0b344143b8cdd9b5488f864275b64d6168"
     },
     {
       "destination": "src/research_hub/executor/__init__.py",
@@ -220,6 +239,46 @@
       "destination": "src/research_hub/renewal/target.py",
       "kind": "new_package_support",
       "destination_sha256": "9480fed3a01950a9718669edbd9808660cd852fe41bff2fb47417b4ba2946aa0"
+    }
+  ],
+  "deployment_scripts": [
+    {
+      "destination": "scripts/windows/Common.ps1",
+      "kind": "new_package_support",
+      "destination_sha256": "9bad8a06b4a0051385f1fafd13944761029df2d5838e355fa4f0b9e842818400"
+    },
+    {
+      "destination": "scripts/windows/Start-ChatGPTBridge.ps1",
+      "kind": "refactored",
+      "destination_sha256": "c249ac1ba604996a9335ad7801637c4ae787574c95422d7941e998c1e850b507",
+      "source": "Start-ChatGPTBridge.ps1",
+      "source_sha256": "a2500d947db3979a0a5b6d20b99e31e75c5f9d1140c64c452f644ef0300606bd"
+    },
+    {
+      "destination": "scripts/windows/Start-Collector.ps1",
+      "kind": "new_package_support",
+      "destination_sha256": "f37e2ff4ee096f53a9a858701aa04bc5c3ec9daf1236af632ef900d3be2c357f"
+    },
+    {
+      "destination": "scripts/windows/install-service.ps1",
+      "kind": "refactored",
+      "destination_sha256": "7d730cac6a20329587522b519aa5e8dbac843c2dee923819d5852513ab9b420c",
+      "source": "install-service.ps1",
+      "source_sha256": "4737167b7cd047fc93a1b6f10bf335018123510decb453c9ef968e1ef7d150ec"
+    },
+    {
+      "destination": "scripts/windows/prepare-runtime.ps1",
+      "kind": "refactored",
+      "destination_sha256": "ddee9e89f22a20f1dec4068015f35ff7d7b7109c62e24ff442660aa66aa0bb6c",
+      "source": "prepare-runtime.ps1",
+      "source_sha256": "9db52f886f20fbe10bc89a4f2010d903d00ca23b23a0e065955ec456a3af2b95"
+    },
+    {
+      "destination": "scripts/windows/prepare-tunnel.ps1",
+      "kind": "refactored",
+      "destination_sha256": "68f77df8893d2651c7b6caaafe2d0430bb15f55d32f95a1deaa07fc821db5e3b",
+      "source": "prepare-tunnel.ps1",
+      "source_sha256": "4133a6f28d69f67de03785a01c8b1fce6d9ff5d35c5f919427e3ea01d2371d8e"
     }
   ]
 }

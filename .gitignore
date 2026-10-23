@@ -49,6 +49,11 @@ remote.json
 progress.json
 executor.json
 acceptance.json
+tunnel.json
+tunnel-profile.yaml
+tunnel-health.url
+tunnel-status.json
+*.log
 ledger.json
 copy-ledger.json
 state/

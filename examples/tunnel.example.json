@@ -1,0 +1,5 @@
+{
+  "tunnel_client": "C:/Tools/tunnel-client/tunnel-client.exe",
+  "tunnel_id": "COPY_YOUR_COMPLETE_TUNNEL_ID_HERE",
+  "http_proxy": null
+}

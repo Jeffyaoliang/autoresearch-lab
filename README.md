@@ -27,6 +27,7 @@ uv run --no-editable pytest -q
 | `executor` | 固定实验请求的策略、状态与 RPC；保留原型的执行门槛 | [执行与验收](docs/components-execution.md) |
 | `acceptance` | 固定绑定的观测、预检和事件归属校验 | [执行与验收](docs/components-execution.md) |
 | `renewal` | 原实例续起与模板复制两套状态机，显式注入平台 runner | [容器续起](docs/components-renewal.md) |
+| `deployment` | 现用部署链路的通用化：采集守护、Windows 计划任务、官方 Tunnel 安装与启动 | [部署说明](docs/deployment.md) |
 
 建议投递的“已收到”表示消息进入指定会话上下文。模型是否运行、实验是否执行，是独立的结果。当前 MCP 不提供实验执行工具；独立 executor 的非文本实验入口仍保留原型的禁用门槛。
 
@@ -38,7 +39,7 @@ uv run --no-editable pytest -q
 - `get_research_guidance_status(request_id)`：区分排队、投递不确定、已进入会话上下文。
 - `list_research_tasks()` 与 `get_research_progress()`：读取经过筛选的平台状态与研究记录。
 
-这些工具由 `research-hub stdio` 提供。`research-hub http` 启动的是另一份只读 Bridge，不包含指导投递工具；本版没有打包可供 ChatGPT 直接连接的公网 MCP 入口、TLS relay 或连接器安装流程。仍需部署远端包与 worker、填写私有配置，并接入现有或单独配置的远程 MCP 入口。
+这些工具由 `research-hub stdio` 提供。现用的 OpenAI 官方 `tunnel-client` 通过出站连接把 ChatGPT 请求转发到 stdio 适配器，不需要公开本机 HTTP 服务。仓库包含对应的安装、采集守护、计划任务及前台连接脚本，见[部署说明](docs/deployment.md)。`research-hub http` 是另一份只读 Bridge，不包含指导投递工具；远端包、worker 和私有配置仍需要按自己的环境部署。
 
 投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。整理版只完成离线验证，尚未重新部署做线上端到端验收。配置和边界见[指导与进度](docs/components-guidance.md)。
 
@@ -51,6 +52,8 @@ src/research_hub/       可安装的模块，导入不会启动服务
   executor/            执行策略与状态
   acceptance/          验收观测
   renewal/             续起 / 复制状态机
+  deployment/          采集守护与官方 Tunnel 启动器
+scripts/windows/       运行环境、客户端、计划任务及操作员入口
 examples/              合成轨迹与配置模板
 schemas/               原有研究事件格式草案
 tests/                 独立临时目录与假传输上的离线测试

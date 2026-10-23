@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+from pathlib import Path
 from datetime import datetime, timezone
 
 
@@ -40,6 +42,14 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("demo", help="project one synthetic task snapshot, entirely offline")
     sub.add_parser("stdio", help="serve the narrow MCP snapshot and advisory interface")
     sub.add_parser("http", help="serve the configured read-only collector on loopback")
+    supervisor = sub.add_parser("supervise", help="supervise only the local read-only collector")
+    supervisor.add_argument("--state-dir", help="explicit private collector state directory")
+    tunnel = sub.add_parser(
+        "tunnel", help="preflight or explicitly connect the official MCP tunnel"
+    )
+    tunnel.add_argument("--preflight", action="store_true")
+    tunnel.add_argument("--prepare", action="store_true")
+    tunnel.add_argument("--connect", action="store_true")
     args = parser.parse_args(argv)
     if args.command == "demo":
         print(json.dumps(demo(), ensure_ascii=False, indent=2))
@@ -51,4 +61,23 @@ def main(argv: list[str] | None = None) -> int:
         from .bridge import main as serve_bridge
 
         serve_bridge()
+    elif args.command == "supervise":
+        from .deployment.supervisor import main as supervise
+
+        if args.state_dir:
+            os.environ["RESEARCH_HUB_STATE_DIR"] = str(Path(args.state_dir).expanduser().absolute())
+        return supervise()
+    elif args.command == "tunnel":
+        from .deployment.tunnel import main as connect_tunnel
+
+        options = [
+            flag
+            for flag, enabled in (
+                ("--preflight", args.preflight),
+                ("--prepare", args.prepare),
+                ("--connect", args.connect),
+            )
+            if enabled
+        ]
+        return connect_tunnel(options)
     return 0
