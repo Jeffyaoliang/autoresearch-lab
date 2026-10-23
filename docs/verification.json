@@ -37,7 +37,7 @@
   },
   "powershell_tests": {
     "local_passed": 29,
-    "windows_only_cases": 7,
+    "windows_only_cases": 8,
     "local_shell": "PowerShell 7.6.8",
     "external_commands": "mocked; no real service registration or cloud connection"
   }

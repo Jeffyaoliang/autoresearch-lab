@@ -441,16 +441,53 @@ def test_new_private_directory_has_only_expected_allow_sids(tmp_path):
         f"""
 . {ps_string(SCRIPTS / "Common.ps1")}
 $path = {ps_string(directory)}
+$acl = Get-Acl -LiteralPath $path
+$ownerRights = [Security.Principal.SecurityIdentifier]::new('S-1-3-4')
+$rule = [Security.AccessControl.FileSystemAccessRule]::new($ownerRights, 'Read', 'Allow')
+$acl.AddAccessRule($rule)
+Set-Acl -LiteralPath $path -AclObject $acl
 Set-HubPrivateAcl $path
 $own = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-$sids = @((Get-Acl -LiteralPath $path).Access | Where-Object {{
+$updated = Get-Acl -LiteralPath $path
+$owner = $updated.GetOwner([Security.Principal.SecurityIdentifier]).Value
+$sids = @($updated.Access | Where-Object {{
   $_.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow
 }} | ForEach-Object {{ $_.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value }})
-Write-TestResult @{{ own = $own; sids = @($sids) }}
+Write-TestResult @{{ own = $own; owner = $owner; sids = @($sids) }}
 """,
     )
     assert {result["own"], "S-1-5-18"} <= set(result["sids"])
-    assert set(result["sids"]) <= {result["own"], "S-1-5-18", "S-1-5-32-544"}
+    assert result["owner"] in {result["own"], "S-1-5-18", "S-1-5-32-544"}
+    assert "S-1-3-4" in result["sids"]
+    assert set(result["sids"]) <= {result["own"], "S-1-5-18", "S-1-5-32-544", "S-1-3-4"}
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows filesystem ACLs required")
+def test_private_acl_rejects_untrusted_owner_before_any_acl_change(tmp_path):
+    directory = tmp_path / "mock-owner-fixture"
+    directory.mkdir()
+    result = run_ps(
+        tmp_path,
+        f"""
+. {ps_string(SCRIPTS / "Common.ps1")}
+$global:fakeAcl = [pscustomobject]@{{ Access = @() }}
+$global:fakeAcl | Add-Member -MemberType ScriptMethod -Name GetOwner -Value {{
+  param($IdentityType)
+  [Security.Principal.SecurityIdentifier]::new('S-1-1-0')
+}}
+function Get-Acl {{ $global:fakeAcl }}
+$global:changed = $false; $failed = $false; $reason = ''
+function icacls.exe {{ $global:changed = $true; $global:LASTEXITCODE = 0 }}
+try {{ Set-HubPrivateAcl {ps_string(directory)} }}
+catch {{ $failed = $true; $reason = $_.Exception.Message }}
+Write-TestResult @{{ rejected = $failed; changed = $global:changed; reason = $reason }}
+""",
+    )
+    assert result == {
+        "rejected": True,
+        "changed": False,
+        "reason": "Existing ACL owner requires operator review.",
+    }
 
 
 @pytest.mark.skipif(os.name != "nt", reason="Windows filesystem reparse points required")

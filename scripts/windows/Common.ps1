@@ -34,8 +34,16 @@ function Set-HubPrivateAcl {
         throw 'Private deployment ACL target must not be a reparse point.'
     }
     $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-    $allowed = @($sid, 'S-1-5-18', 'S-1-5-32-544')
+    $trustedOwners = @($sid, 'S-1-5-18', 'S-1-5-32-544')
     $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
+    try { $owner = $acl.GetOwner([Security.Principal.SecurityIdentifier]).Value }
+    catch { throw 'Existing ACL owner requires operator review.' }
+    if ($owner -notin $trustedOwners) {
+        throw 'Existing ACL owner requires operator review.'
+    }
+    # OWNER RIGHTS refers to this object's owner, whose identity was verified
+    # above. Preserve that legitimate ACE without trusting an arbitrary owner.
+    $allowed = $trustedOwners + @('S-1-3-4')
     foreach ($rule in $acl.Access) {
         if (-not $rule.IsInherited -and $rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow) {
             try { $principal = $rule.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value }

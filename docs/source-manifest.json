@@ -245,7 +245,7 @@
     {
       "destination": "scripts/windows/Common.ps1",
       "kind": "new_package_support",
-      "destination_sha256": "86ba99e7ab585d4b55b8f8102ba9bdf41abb7e90bfc2615fd1eb2d383def1474"
+      "destination_sha256": "ecb181bb968975fd417ce4748fcf97f43b169a68a8cf7358417f97d3fe3b9096"
     },
     {
       "destination": "scripts/windows/Start-ChatGPTBridge.ps1",
