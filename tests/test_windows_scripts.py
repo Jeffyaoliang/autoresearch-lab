@@ -403,3 +403,71 @@ Write-TestResult @{{ argument = (ConvertTo-HubArgument {ps_string("C:" + chr(92)
 """,
     )
     assert result["argument"] == '"C:' + chr(92) * 2 + '"'
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows filesystem ACLs required")
+@pytest.mark.parametrize("kind", ["directory", "file"])
+def test_private_acl_rejects_existing_everyone_read_without_changing_acl(tmp_path, kind):
+    target = tmp_path / "empty-acl-fixture"
+    if kind == "directory":
+        target.mkdir()
+    else:
+        target.touch()
+    result = run_ps(
+        tmp_path,
+        f"""
+. {ps_string(SCRIPTS / "Common.ps1")}
+$path = {ps_string(target)}
+$acl = Get-Acl -LiteralPath $path
+$everyone = [Security.Principal.SecurityIdentifier]::new('S-1-1-0')
+$rule = [Security.AccessControl.FileSystemAccessRule]::new($everyone, 'Read', {ps_string("ContainerInherit,ObjectInherit" if kind == "directory" else "None")}, 'None', 'Allow')
+$acl.AddAccessRule($rule)
+Set-Acl -LiteralPath $path -AclObject $acl
+$before = (Get-Acl -LiteralPath $path).Sddl
+$failed = $false
+try {{ Set-HubPrivateAcl $path }} catch {{ $failed = $true }}
+Write-TestResult @{{ rejected = $failed; unchanged = ((Get-Acl -LiteralPath $path).Sddl -eq $before) }}
+""",
+    )
+    assert result == {"rejected": True, "unchanged": True}
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows filesystem ACLs required")
+def test_new_private_directory_has_only_expected_allow_sids(tmp_path):
+    directory = tmp_path / "dedicated-private-fixture"
+    directory.mkdir()
+    result = run_ps(
+        tmp_path,
+        f"""
+. {ps_string(SCRIPTS / "Common.ps1")}
+$path = {ps_string(directory)}
+Set-HubPrivateAcl $path
+$own = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+$sids = @((Get-Acl -LiteralPath $path).Access | Where-Object {{
+  $_.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow
+}} | ForEach-Object {{ $_.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value }})
+Write-TestResult @{{ own = $own; sids = @($sids) }}
+""",
+    )
+    assert {result["own"], "S-1-5-18"} <= set(result["sids"])
+    assert set(result["sids"]) <= {result["own"], "S-1-5-18", "S-1-5-32-544"}
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows filesystem reparse points required")
+def test_private_acl_rejects_junction_without_changing_target(tmp_path):
+    target = tmp_path / "junction-target-fixture"
+    target.mkdir()
+    link = tmp_path / "junction-fixture"
+    result = run_ps(
+        tmp_path,
+        f"""
+. {ps_string(SCRIPTS / "Common.ps1")}
+$target = {ps_string(target)}; $link = {ps_string(link)}
+New-Item -ItemType Junction -Path $link -Target $target | Out-Null
+$before = (Get-Acl -LiteralPath $target).Sddl
+$failed = $false
+try {{ Set-HubPrivateAcl $link }} catch {{ $failed = $true }}
+Write-TestResult @{{ rejected = $failed; target_unchanged = ((Get-Acl -LiteralPath $target).Sddl -eq $before) }}
+""",
+    )
+    assert result == {"rejected": True, "target_unchanged": True}

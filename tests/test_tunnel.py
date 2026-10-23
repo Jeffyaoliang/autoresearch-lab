@@ -141,6 +141,57 @@ class TunnelTests(unittest.TestCase):
         self.assertIn("existing_profile_differs_requires_review", output)
         self.assertEqual(path.read_text(), "operator reviewed different configuration")
 
+    def test_prepare_writes_lf_and_is_idempotent(self):
+        path = tunnel.prepare(self.config, self.root)
+        original = path.read_bytes()
+        self.assertEqual(original, tunnel.profile_text(self.config, self.root).encode("utf-8"))
+        self.assertNotIn(b"\r\n", original)
+        modified_at = path.stat().st_mtime_ns
+        self.assertEqual(tunnel.prepare(self.config, self.root), path)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertEqual(path.stat().st_mtime_ns, modified_at)
+
+    def test_existing_crlf_profile_is_accepted_without_rewriting(self):
+        path = self.root / "tunnel-profile.yaml"
+        original = tunnel.profile_text(self.config, self.root).replace("\n", "\r\n").encode("utf-8")
+        path.write_bytes(original)
+        modified_at = path.stat().st_mtime_ns
+        tunnel.prepare(self.config, self.root)
+        tunnel.prepare(self.config, self.root)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertEqual(path.stat().st_mtime_ns, modified_at)
+
+    def test_changed_crlf_profile_is_rejected_without_rewriting(self):
+        path = self.root / "tunnel-profile.yaml"
+        changed = tunnel.profile_text(self.config, self.root).replace("level: warn", "level: debug")
+        original = changed.replace("\n", "\r\n").encode("utf-8")
+        path.write_bytes(original)
+        modified_at = path.stat().st_mtime_ns
+        with self.assertRaisesRegex(tunnel.TunnelError, "existing_profile_differs_requires_review"):
+            tunnel.prepare(self.config, self.root)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertEqual(path.stat().st_mtime_ns, modified_at)
+
+    def test_connect_with_existing_crlf_profile_reaches_doctor(self):
+        path = self.root / "tunnel-profile.yaml"
+        original = tunnel.profile_text(self.config, self.root).replace("\n", "\r\n").encode("utf-8")
+        path.write_bytes(original)
+        with (
+            patch.dict(os.environ, {"CONTROL_PLANE_API_KEY": KEY}),
+            patch.object(
+                tunnel.subprocess, "run", return_value=subprocess.CompletedProcess([], 2)
+            ) as doctor,
+            patch.object(
+                tunnel.subprocess, "Popen", side_effect=AssertionError("run must not start")
+            ),
+        ):
+            code, output = self.invoke(["--connect"])
+        self.assertEqual(code, 1)
+        self.assertIn("doctor_failed", output)
+        doctor.assert_called_once()
+        self.assertEqual(doctor.call_args.args[0][1], "doctor")
+        self.assertEqual(path.read_bytes(), original)
+
     def test_missing_installed_distribution_fails_before_key(self):
         with (
             patch.object(tunnel, "distribution", side_effect=tunnel.PackageNotFoundError()),

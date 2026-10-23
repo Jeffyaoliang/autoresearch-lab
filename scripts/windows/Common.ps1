@@ -22,16 +22,33 @@ function ConvertTo-HubArgument {
     if ($Value.IndexOfAny([char[]]"`r`n`0`"") -ge 0) {
         throw 'Invalid task argument.'
     }
-    # These arguments are passed to PowerShell -File, never evaluated as commands.
+    # Quote native-process arguments without evaluating a command expression.
     $escaped = [regex]::Replace($Value, '(\\+)$', '$1$1')
     return '"' + $escaped + '"'
 }
 
 function Set-HubPrivateAcl {
     param([Parameter(Mandatory = $true)][string]$Path)
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+        throw 'Private deployment ACL target must not be a reparse point.'
+    }
     $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+    $allowed = @($sid, 'S-1-5-18', 'S-1-5-32-544')
+    $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
+    foreach ($rule in $acl.Access) {
+        if (-not $rule.IsInherited -and $rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow) {
+            try { $principal = $rule.IdentityReference.Translate([Security.Principal.SecurityIdentifier]).Value }
+            catch { throw 'Existing explicit ACL principal requires operator review.' }
+            if ($principal -notin $allowed) {
+                # Do not remove another principal's explicit access on an existing
+                # operator-selected directory or file. Require a dedicated scope.
+                throw 'Existing explicit ACL access requires operator review.'
+            }
+        }
+    }
     $rights = 'F'
-    if (Test-Path -LiteralPath $Path -PathType Container) { $rights = '(OI)(CI)F' }
+    if ($item.PSIsContainer) { $rights = '(OI)(CI)F' }
     & icacls.exe $Path '/inheritance:r' '/grant:r' ('*' + $sid + ':' + $rights) ('*S-1-5-18:' + $rights) | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Private deployment ACL setup failed.' }
 }

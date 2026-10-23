@@ -87,7 +87,7 @@
       "kind": "refactored",
       "source": "connect_secure_tunnel.py",
       "source_sha256": "fb60688a3327b1fd2e4be7b21530bb7af43b3fad69ffb0a38ef0a7fc6df1eb76",
-      "destination_sha256": "f5730363b81fa6f76981dc488c4f8c0b344143b8cdd9b5488f864275b64d6168"
+      "destination_sha256": "52db1ffb5b96ee57edb1dbd36e633a8fc9c5d25cfa9a974e5fcb36058e916061"
     },
     {
       "destination": "src/research_hub/executor/__init__.py",
@@ -245,7 +245,7 @@
     {
       "destination": "scripts/windows/Common.ps1",
       "kind": "new_package_support",
-      "destination_sha256": "9bad8a06b4a0051385f1fafd13944761029df2d5838e355fa4f0b9e842818400"
+      "destination_sha256": "86ba99e7ab585d4b55b8f8102ba9bdf41abb7e90bfc2615fd1eb2d383def1474"
     },
     {
       "destination": "scripts/windows/Start-ChatGPTBridge.ps1",

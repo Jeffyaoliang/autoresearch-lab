@@ -350,7 +350,7 @@ def prepare(config, root):
     path = root / "tunnel-profile.yaml"
     profile = profile_text(config, root)
     if path.exists() or path.is_symlink():
-        if _safe_file(path).decode("utf-8") != profile:
+        if _safe_file(path).decode("utf-8").replace("\r\n", "\n") != profile:
             raise TunnelError("existing_profile_differs_requires_review")
     else:
         try:
@@ -359,7 +359,7 @@ def prepare(config, root):
             )
         except OSError:
             raise TunnelError("profile_unavailable") from None
-        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as stream:
             stream.write(profile)
             stream.flush()
             os.fsync(stream.fileno())

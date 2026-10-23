@@ -25,6 +25,8 @@
 
 `prepare-runtime.ps1` 使用独立的 `UV_PROJECT_ENVIRONMENT` 和非 editable 安装，不把运行目录放进源码树。`install-service.ps1` 以当前用户注册启动和登录触发器，使用 Limited/S4U，并直接启动已安装的 Python 包；它没有隧道密钥，也不会启动远端实验。模板中的平台采集默认关闭。先在状态目录的 `bridge.json` 中填写自己的可执行文件、工作区和归属字段，再启用采集。已有配置和令牌会保留。
 
+安装器使用专用私有状态目录。如果现有目录或文件显式允许其他主体访问，或目标是 Windows ReparsePoint，它会停止并保留原权限，要求部署者改用合适的目录。
+
 ```powershell
 # 配置完成后，显式启动本机采集任务。
 Start-ScheduledTask -TaskName 'ResearchHub-Collector'
