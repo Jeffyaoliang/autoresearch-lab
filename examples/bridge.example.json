@@ -1,0 +1,9 @@
+{
+  "sco_enabled": false,
+  "sco_executable": "/path/to/sco",
+  "workspace": "example-workspace",
+  "owner_user_name_prefix": "example-user",
+  "owner_user_id": "example-owner-id",
+  "collection_interval_seconds": 60,
+  "approved_reports": {}
+}
