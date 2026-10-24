@@ -101,7 +101,7 @@ uv run --no-editable pytest -q
 
 这些工具由 `research-hub stdio` 提供。现用的 OpenAI 官方 `tunnel-client` 通过出站连接把 ChatGPT 请求转发到 stdio 适配器，不需要公开本机 HTTP 服务。仓库包含对应的安装、采集守护、计划任务及前台连接脚本，见[部署说明](docs/deployment.md)。`research-hub http` 是另一份只读 Bridge，不包含指导投递工具；远端包、worker 和私有配置仍需要按自己的环境部署。
 
-投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。公开包已在独立环境完成真实状态查询、MCP stdio 建议投递与官方回执验收；ChatGPT 云端 Tunnel 调用仍返回 HTTP 429，完整云端链路尚未通过。配置和边界见[指导与进度](docs/components-guidance.md)。
+投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。公开包已在独立环境完成真实状态查询、MCP stdio 建议投递与官方回执验收；现有部署的 ChatGPT 云端 Tunnel 已恢复并通过真实查询，但尚未替换为公开包适配器；24 小时持续测试正在运行。配置和边界见[指导与进度](docs/components-guidance.md)。
 
 ## 目录
 

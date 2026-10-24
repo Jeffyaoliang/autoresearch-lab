@@ -36,8 +36,62 @@
       "http_status": 429
     },
     "workstation_powershell_file_tests": {
-      "passed": false,
-      "reason": "blocked_by_existing_execution_policy_not_changed"
+      "passed": true,
+      "interpreter": "official_portable_PowerShell_7.6.8",
+      "windows_suite_passed": 76,
+      "subtests_passed": 7,
+      "system_execution_policy_changed": false,
+      "previous_attempt": "Windows_PowerShell_5.1_file_execution_blocked"
+    },
+    "existing_deployment_cloud_tunnel_recheck": {
+      "passed": true,
+      "verified_at": "2026-10-24T14:49:06+00:00",
+      "tool": "list_research_tasks",
+      "reason": "fresh_snapshot",
+      "healthz_http": 200,
+      "readyz_http": 200,
+      "public_package_replaced_existing_adapter": false
+    },
+    "isolated_supervisor_recovery": {
+      "scenario": "isolated_real_supervisor_child_recovery",
+      "source": "installed_public_package",
+      "production_processes_touched": false,
+      "fault_cycles": [
+        {
+          "index": 1,
+          "recovered": true,
+          "recovery_seconds": 1.631
+        },
+        {
+          "index": 2,
+          "recovered": true,
+          "recovery_seconds": 4.355
+        },
+        {
+          "index": 3,
+          "recovered": true,
+          "recovery_seconds": 4.617
+        }
+      ],
+      "initial_health_passed": true,
+      "duplicate_supervisor_exits_without_second_child": true,
+      "graceful_stop_releases_listener": true,
+      "supervisor_stopped_state": true,
+      "passed": true,
+      "platform": "macOS"
+    },
+    "continuous_validation": {
+      "status": "running_not_yet_accepted",
+      "started_at": "2026-10-24T15:02:22.680548+00:00",
+      "planned_duration_seconds": 86400,
+      "sample_interval_seconds": 60,
+      "components": [
+        "installed_public_package_persistent_mcp_stdio",
+        "live_read_only_collector",
+        "existing_deployment_tunnel_health_and_readiness"
+      ],
+      "model_turns_started": 0,
+      "guidance_submitted": 0
     }
   }
 }
