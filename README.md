@@ -101,7 +101,7 @@ uv run --no-editable pytest -q
 
 这些工具由 `research-hub stdio` 提供。现用的 OpenAI 官方 `tunnel-client` 通过出站连接把 ChatGPT 请求转发到 stdio 适配器，不需要公开本机 HTTP 服务。仓库包含对应的安装、采集守护、计划任务及前台连接脚本，见[部署说明](docs/deployment.md)。`research-hub http` 是另一份只读 Bridge，不包含指导投递工具；远端包、worker 和私有配置仍需要按自己的环境部署。
 
-投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。整理版只完成离线验证，尚未重新部署做线上端到端验收。配置和边界见[指导与进度](docs/components-guidance.md)。
+投递接口不会调用 `turn/start`，回执始终标明 `model_processing_started=false`、`execution_authorized=false`。它包含“把指导送进会话”的实现；“让 Codex 立即开始处理并执行实验”尚未接入这条 MCP 路径。公开包已在独立环境完成真实状态查询、MCP stdio 建议投递与官方回执验收；ChatGPT 云端 Tunnel 调用仍返回 HTTP 429，完整云端链路尚未通过。配置和边界见[指导与进度](docs/components-guidance.md)。
 
 ## 目录
 
@@ -129,7 +129,7 @@ docs/                  研究计划、组件接口和迁移说明
 - 远端建议和进度读取需要 `remote.json`、`progress.json` 以及远端安装；字段见[组件说明](docs/components-guidance.md)。Windows 传输额外使用 `uv sync --extra windows`。
 - executor 和 acceptance 使用独立的显式配置与可信 peer 绑定；renewal 要求调用方显式注入 runner 和目标身份。
 
-迁移现有服务前请阅读[迁移说明](docs/code-organization.md)。本次整理版使用新的包入口和配置位置，原有现场部署仍使用原始文件布局。
+迁移现有服务前请阅读[迁移说明](docs/code-organization.md)。本次整理版使用新的包入口和配置位置，原有现场部署仍使用原始文件布局。独立环境的验收结果见[真实链路验收记录](docs/live-validation-2026-10-24.md)。
 
 ## 开发检查
 

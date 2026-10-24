@@ -24,4 +24,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: uv sync --locked --no-editable
-      - run: uv run --no-editable pytest -q tests/test_windows_scripts.py tests/test_supervisor.py tests/test_tunnel.py
+      - run: uv run --no-editable pytest -q tests/test_windows_scripts.py tests/test_windows_pty.py tests/test_supervisor.py tests/test_tunnel.py

@@ -80,12 +80,19 @@ def verify_remote(config):
         raise ValueError("remote_identity_or_state_mismatch")
 
 
+def spawn_sco_winpty(args):
+    """Preserve the SCO CLI command prefix with the Windows WinPTY backend."""
+    from winpty import Backend, PtyProcess
+
+    # SCO consumes the first command-line token as argv[0] under WinPTY.
+    # Include its executable there so the actual "acp" command survives.
+    # This is specific to SCO; Python launchers parse the same input differently.
+    return PtyProcess.spawn([args[0], *args], dimensions=(40, 140), backend=Backend.WinPTY)
+
+
 def run_remote(command, config):
     if os.name != "nt":
         raise ValueError("sco_pty_requires_windows")
-    # Optional platform dependency; Linux/macOS users can import every package.
-    from winpty import Backend, PtyProcess
-
     verify_remote(config)
     args = [
         config["sco_executable"],
@@ -96,7 +103,7 @@ def run_remote(command, config):
         "--workspace-name=" + config["workspace_name"],
         "--worker-name=" + config["worker_name"],
     ]
-    process = PtyProcess.spawn(args, dimensions=(40, 140), backend=Backend.WinPTY)
+    process = spawn_sco_winpty(args)
     chunks = queue.Queue()
 
     def reader():

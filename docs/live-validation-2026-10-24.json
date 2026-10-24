@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "scope": "Independent installed public package: live Windows collector, MCP stdio, remote mailbox, Codex context receipt. Not a cloud Tunnel acceptance.",
+  "windows_python": "3.12.15",
+  "remote_python": "3.14",
+  "wheel_sha256": "66fe6962aa87e2e3ca2751030eefa81a76a337cab2a78eb97ea009106d5ad2b3",
+  "transport_sha256": "bd63e24ec9a2e8369d451ac08a74dc2a196fadd814f73693eab8692e94489e94",
+  "checks": {
+    "live_owned_task_query": true,
+    "task_count": 20,
+    "fresh_source": true,
+    "mcp_stdio_initialize": true,
+    "mcp_stdio_tools": [
+      "list_research_tasks",
+      "get_research_progress",
+      "submit_research_guidance",
+      "get_research_guidance_status"
+    ],
+    "advisory_receipt": {
+      "state": "received_in_codex_context",
+      "codex_received": true,
+      "receipt_kind": "official_thread_inject_items_ack",
+      "model_processing_started": false,
+      "execution_authorized": false,
+      "received_at": "2026-10-24T05:13:00.891253+00:00",
+      "message_sha256": "3d223f4015fdb77c9416f961ce23ff510ddfc12a9a2ab8f2e8b7e22e1cb67f86"
+    },
+    "duplicate_submission_detected": true,
+    "official_thread_read_verified": true,
+    "message_occurrences_in_rollout_tail": 1,
+    "test_thread_idle": true,
+    "test_worker_stopped": true,
+    "production_deployment_replaced": false,
+    "cloud_tunnel_probe": {
+      "passed": false,
+      "http_status": 429
+    },
+    "workstation_powershell_file_tests": {
+      "passed": false,
+      "reason": "blocked_by_existing_execution_policy_not_changed"
+    }
+  }
+}

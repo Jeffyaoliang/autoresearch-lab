@@ -77,7 +77,7 @@ Python 的对应入口是 `research-hub tunnel`、`research-hub tunnel --prepare
 
 ## 远端指导与验收
 
-先在服务器安装相同版本的包，按照[指导与进度](components-guidance.md)配置远端私有收件箱、固定会话绑定和本地 `remote.json`，再显式启动：
+先在服务器选用 Python 3.11 或更新版本的解释器，安装相同版本的包，按照[指导与进度](components-guidance.md)配置远端私有收件箱、固定会话绑定和本地 `remote.json`，再显式启动：
 
 ```sh
 export RESEARCH_HUB_STATE_DIR=/srv/example/state
@@ -88,4 +88,4 @@ python -m research_hub.guidance.worker
 
 最后在 ChatGPT 接入已有 Tunnel，核对四个工具：`list_research_tasks`、`get_research_progress`、`submit_research_guidance`、`get_research_guidance_status`。先读取状态，再用一个可识别的请求 ID 投递测试指导并查询回执。指导会写入绑定会话上下文，仍不调用 `turn/start` 或执行实验。
 
-客户端健康、ready 和轮询活动分别是连接证据，不能代替 ChatGPT 实际工具调用，也不能证明科研执行成功。本仓库的自动验证使用假客户端、合成状态与本地进程夹具；没有将这次脚本整理部署到现有运行环境。
+客户端健康、ready 和轮询活动分别是连接证据，不能代替 ChatGPT 实际工具调用，也不能证明科研执行成功。本仓库的自动验证使用假客户端、合成状态与本地进程夹具。2026-10-24 另外完成了独立环境的真实 stdio 查询与建议回执验收；原常驻部署未被替换，云端 Tunnel 调用仍未通过，详见[验收记录](live-validation-2026-10-24.md)。
