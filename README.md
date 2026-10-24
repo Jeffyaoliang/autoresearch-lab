@@ -2,19 +2,19 @@
 
 面向长时程自主科研 Agent 的持久执行、过程评测与 Agent-native 计算基础设施。
 
-当前现场的主用路径是 **Mac 上的 Codex 经 SSH 到 Windows，再通过 SCO CLI 访问商汤 SenseCore 服务器上的科研环境**。Research Hub 整理了其中的状态采集、平台适配和消息投递组件，并提供 **ChatGPT 经 MCP 接入的可选入口**。
+当前现场的主用路径是 **Mac 上的 Codex 经 SSH 到 Windows，再通过 SCO CLI 访问远程 GPU 服务器上的科研环境**。Research Hub 整理了其中的状态采集、平台适配和消息投递组件，并提供 **ChatGPT 经 MCP 接入的可选入口**。
 
 **项目状态：早期研究。** 这里包含从 Research Hub 私有原型整理出的 Python 包、离线测试和研究计划。包内的合成演示与测试用于验证软件行为；真实 GPU Campaign 和科研效果仍需单独验证。
 
-## Mac、Windows 和商汤服务器如何分工
+## Mac、Windows 和远程服务器如何分工
 
 | 位置 | 当前部署中的职责 |
 | --- | --- |
 | **Mac：交互与操作端** | 研究者在 Codex 中提出任务，Codex 按需通过已有 SSH 连接在 Windows 上执行命令。研究者也可使用 ChatGPT，经可选的 MCP 入口查询状态或投递建议。 |
-| **Windows：远程接入与平台适配端** | 接收 Mac 的 SSH 远程命令，使用已配置的 SCO CLI 访问商汤容器，并运行本地状态采集与守护。可选的 ChatGPT 入口还使用官方 `tunnel-client` 和 stdio MCP 适配器。 |
-| **商汤 SenseCore ACP 的 Linux/GPU 环境：科研端** | 部署 Codex 会话、研究代码与数据，以及私有指导收件箱和 worker；worker 将指导注入固定会话。具备计算环境不代表实验已经启动或完成。 |
+| **Windows：远程接入与平台适配端** | 接收 Mac 的 SSH 远程命令，使用已配置的 SCO CLI 访问远程研究容器，并运行本地状态采集与守护。可选的 ChatGPT 入口还使用官方 `tunnel-client` 和 stdio MCP 适配器。 |
+| **远程 Linux/GPU 环境：科研端** | 部署 Codex 会话、研究代码与数据，以及私有指导收件箱和 worker；worker 将指导注入固定会话。具备计算环境不代表实验已经启动或完成。 |
 
-实线表示当前主用路径和共用的商汤访问通道，虚线表示可选的 ChatGPT MCP 入口。箭头表示请求或操作方向，结果沿原通道返回；图描述部署分工，不表示各段连接或实验已经通过实时验收。
+实线表示当前主用路径和共用的远程访问通道，虚线表示可选的 ChatGPT MCP 入口。箭头表示请求或操作方向，结果沿原通道返回；图描述部署分工，不表示各段连接或实验已经通过实时验收。
 
 ```mermaid
 flowchart TB
@@ -33,7 +33,7 @@ flowchart TB
     subgraph windows["Windows：共同的接入与桥接机器"]
         ssh["SSH 远程命令"]
         mcp["Tunnel 客户端 + stdio MCP 服务"]
-        sco["SCO CLI：访问商汤平台"]
+        sco["SCO CLI：访问远程计算平台"]
         snapshot["采集器与任务状态快照"]
 
         ssh --> sco
@@ -41,7 +41,7 @@ flowchart TB
         mcp -. "读取任务状态" .-> snapshot
     end
 
-    subgraph sensecore["商汤 SenseCore：科研端"]
+    subgraph research_server["远程 GPU 服务器：科研端"]
         container["ACP 研究容器"]
         serverCodex["服务器上的 Codex 会话"]
         workspace["研究代码、数据与实验记录"]
@@ -60,9 +60,9 @@ flowchart TB
 
 **主用 SSH 路径**依赖现有的 Mac 到 Windows SSH 连接和 Windows 上的 SCO 配置，不需要 ChatGPT MCP Tunnel。仓库中的安装脚本不会自动建立 SSH 接入或登录 SCO。
 
-**可选 MCP 路径**由 ChatGPT 服务端发起调用，经官方 Tunnel 到 Windows。任务状态从 Windows 的采集快照读取；研究记录查询和指导投递再通过 SCO CLI 访问商汤容器。指导先进入私有收件箱，再由驻留 worker 通过 `thread/inject_items` 注入固定 Codex 会话上下文，不自动启动模型回合或实验。这条 MCP 请求路径不经过 Mac 转发。
+**可选 MCP 路径**由 ChatGPT 服务端发起调用，经官方 Tunnel 到 Windows。任务状态从 Windows 的采集快照读取；研究记录查询和指导投递再通过 SCO CLI 访问远程研究容器。指导先进入私有收件箱，再由驻留 worker 通过 `thread/inject_items` 注入固定 Codex 会话上下文，不自动启动模型回合或实验。这条 MCP 请求路径不经过 Mac 转发。
 
-原现场另有 **Mac 隐藏输入密钥，经 SSH 交给 Windows 隧道启动器**的辅助脚本，用于启动 Tunnel；它与上图的日常 Codex SSH 操作用途不同。这个密钥输入辅助入口尚未收入本整理版；已收录的启动器支持在 Windows 本机隐藏输入或使用进程环境变量。Windows 到商汤容器使用 SCO 平台 CLI。部署步骤见[部署说明](docs/deployment.md)。
+原现场另有 **Mac 隐藏输入密钥，经 SSH 交给 Windows 隧道启动器**的辅助脚本，用于启动 Tunnel；它与上图的日常 Codex SSH 操作用途不同。这个密钥输入辅助入口尚未收入本整理版；已收录的启动器支持在 Windows 本机隐藏输入或使用进程环境变量。Windows 到远程研究容器使用 SCO 平台 CLI。部署步骤见[部署说明](docs/deployment.md)。
 
 ## 快速开始
 

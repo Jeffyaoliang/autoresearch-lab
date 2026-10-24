@@ -9,21 +9,21 @@
 | **Mac** | 研究者的日常 Codex 工作台，通过既有 SSH 在 Windows 执行远程命令；也可使用 ChatGPT 交互界面。原现场另有隐藏输入 Tunnel 运行密钥的启动辅助。 |
 | **ChatGPT 服务端与 OpenAI Tunnel** | 可选的 MCP 入口：ChatGPT 发起工具调用，官方 Tunnel 将请求交给 Windows 上的客户端并返回结果。Mac 上打开 ChatGPT 不意味着模型或 MCP 工具在 Mac 本地执行。 |
 | **Windows** | collector / supervisor、官方 `tunnel-client`、stdio MCP 适配器和 SCO CLI。Windows 承担工具运行、来源筛选、平台适配和请求投递。 |
-| **商汤 SenseCore ACP Linux 容器** | Codex app-server / 固定会话、研究目录、私有收件箱与驻留指导 worker，以及对应的科研计算环境。 |
+| **远程 Linux/GPU 容器** | Codex app-server / 固定会话、研究目录、私有收件箱与驻留指导 worker，以及对应的科研计算环境。 |
 
-日常主路径是 **Mac Codex → 既有 SSH → Windows 远程命令 → Windows SCO CLI → 商汤 SenseCore ACP 容器**，用于在授权范围内查询平台、访问研究目录和操作容器内的工具。这条路径不依赖 ChatGPT 的 MCP 入口。
+日常主路径是 **Mac Codex → 既有 SSH → Windows 远程命令 → Windows SCO CLI → 远程研究容器**，用于在授权范围内查询平台、访问研究目录和操作容器内的工具。这条路径不依赖 ChatGPT 的 MCP 入口。
 
-可选入口是 **ChatGPT 服务端 → OpenAI 官方 Tunnel → Windows 的 tunnel-client → Windows 的 stdio MCP 适配器**。其中 `list_research_tasks` 直接读取 Windows 本机采集快照；研究记录查询和指导投递才继续通过 SCO CLI 的 `acp jobs describe / exec` 访问商汤容器。指导请求经 **私有收件箱 → 驻留 worker → `thread/inject_items`** 进入固定 Codex 会话上下文，不自动调用 `turn/start`，也不代表模型已处理指导或执行实验。
+可选入口是 **ChatGPT 服务端 → OpenAI 官方 Tunnel → Windows 的 tunnel-client → Windows 的 stdio MCP 适配器**。其中 `list_research_tasks` 直接读取 Windows 本机采集快照；研究记录查询和指导投递才继续通过 SCO CLI 的 `acp jobs describe / exec` 访问远程研究容器。指导请求经 **私有收件箱 → 驻留 worker → `thread/inject_items`** 进入固定 Codex 会话上下文，不自动调用 `turn/start`，也不代表模型已处理指导或执行实验。
 
-原现场另有 Tunnel 启动辅助：**Mac 隐藏输入 → 既有 SSH 连接 → Windows 启动器的标准输入 → tunnel-client 进程环境**。它用于安全输入启动密钥，与日常 Mac Codex 经 SSH 执行 Windows 远程命令的用途不同，也不是每次 MCP 请求都经过的转发层。该辅助入口尚未迁入本仓库；整理版支持 Windows 本地隐藏输入或环境变量，没有原现场的 `--key-stdin` 入口。Windows 到商汤容器的 SCO 连接也不同于 Mac 到 Windows 的 SSH 连接。
+原现场另有 Tunnel 启动辅助：**Mac 隐藏输入 → 既有 SSH 连接 → Windows 启动器的标准输入 → tunnel-client 进程环境**。它用于安全输入启动密钥，与日常 Mac Codex 经 SSH 执行 Windows 远程命令的用途不同，也不是每次 MCP 请求都经过的转发层。该辅助入口尚未迁入本仓库；整理版支持 Windows 本地隐藏输入或环境变量，没有原现场的 `--key-stdin` 入口。Windows 到远程研究容器的 SCO 连接也不同于 Mac 到 Windows 的 SSH 连接。
 
-既有 SSH、Windows SCO CLI 及其认证、商汤容器均是部署前提，仓库安装器不会自动建立 SSH、安装或认证 SCO、创建容器。容器内的包、会话绑定和驻留 worker 仍需独立部署。
+既有 SSH、Windows SCO CLI 及其认证、远程研究容器均是部署前提，仓库安装器不会自动建立 SSH、安装或认证 SCO、创建容器。容器内的包、会话绑定和驻留 worker 仍需独立部署。
 
 ## 三个独立的运行进程组
 
 1. Windows 计划任务启动 `research-hub supervise`，由它守护本机 `research-hub http`。Bridge 在 loopback 上运行并写入经过筛选的 `collector-state.json`。
 2. 官方 `tunnel-client` 通过出站连接接收 ChatGPT 请求，再调用 `research-hub stdio`。这条路径不需要公开本机 HTTP 服务。指导投递、回执和研究记录查询都来自这个 stdio 适配器。
-3. 商汤 SenseCore Linux 容器中的 `research_hub.guidance.worker` 将收件箱中的指导注入绑定的 Codex 会话。它需要独立安装和运行，停止 Windows Tunnel 不会停止这个 worker 或研究进程。
+3. 远程 Linux 容器中的 `research_hub.guidance.worker` 将收件箱中的指导注入绑定的 Codex 会话。它需要独立安装和运行，停止 Windows Tunnel 不会停止这个 worker 或研究进程。
 
 官方接入约定见 [OpenAI Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels)。需要已有 Tunnel ID、具有对应权限的运行密钥及 ChatGPT 工作区接入权限。下面的脚本不会创建云端 Tunnel、密钥或插件。
 
