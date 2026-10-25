@@ -1,5 +1,7 @@
 # Container renewal state machines
 
+For Alibaba Cloud ECS, see the [same-instance start adapter and its offline-only validation scope](aliyun-renewal.md). It does not support replacement provisioning, subscription renewal or ECI/ACK.
+
 For Linux/Docker, use the separate [Docker renewal CLI and backend](docker-renewal.md), which restarts one pinned existing failed container without SCO. The remainder of this page documents the original **SCO/ACP-specific guards**.
 
 This package preserves two related implementations from the local Container Renewal prototype. They solve different operations and are not competing versions of one executable:

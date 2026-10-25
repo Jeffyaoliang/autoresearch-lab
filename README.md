@@ -147,6 +147,9 @@ docs/                  Research plans, component interfaces, and migration notes
 
 ## Configuration and operation
 
+For Alibaba Cloud, the minimal [ECS start adapter](docs/aliyun-renewal.md) supports one pinned existing non-spot instance via `research-hub renewal aliyun-ecs init/check/once/watch`. It has offline API-contract/state-machine tests; live Alibaba account acceptance is still pending. It does not create/renew instances or manage ECI/ACK containers.
+
+
 Runtime state and private configuration live in `RESEARCH_HUB_STATE_DIR`. The default is `${XDG_STATE_HOME:-~/.local/state}/research-hub` on Linux/macOS and `%LOCALAPPDATA%/ResearchHub` on Windows. Installation and imports do not create this directory automatically.
 
 - The local collector reads platform and ownership configuration from `bridge.json`. See [bridge.example.json](examples/bridge.example.json); platform collection is disabled by default.

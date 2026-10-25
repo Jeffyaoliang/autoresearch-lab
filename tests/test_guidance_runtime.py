@@ -95,6 +95,7 @@ class RuntimeTests(unittest.TestCase):
                 "research_hub.renewal.restart",
                 "research_hub.renewal.docker",
                 "research_hub.renewal.cli",
+                "research_hub.renewal.aliyun",
             ):
                 importlib.reload(importlib.import_module(module))
 

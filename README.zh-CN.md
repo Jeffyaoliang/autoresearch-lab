@@ -147,6 +147,9 @@ docs/                  研究计划、组件接口和迁移说明
 
 ## 配置与运行
 
+阿里云新增最小 [ECS 自动启动适配](docs/aliyun-renewal.md)：`research-hub renewal aliyun-ecs init/check/once/watch`，针对固定的已有非抢占式实例。已覆盖离线接口与状态机测试，尚未完成真实阿里云账户验收；不创建／续费实例，也不管理 ECI／ACK 容器。
+
+
 运行状态与私有配置放在 `RESEARCH_HUB_STATE_DIR`。默认目录为 Linux/macOS 的 `${XDG_STATE_HOME:-~/.local/state}/research-hub`，Windows 的 `%LOCALAPPDATA%/ResearchHub`。安装和导入不会自动创建它。
 
 - 本机 collector 从 `bridge.json` 读取平台及归属配置；模板见 [bridge.example.json](examples/bridge.example.json)，默认关闭平台采集。
