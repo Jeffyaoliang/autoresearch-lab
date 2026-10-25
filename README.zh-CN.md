@@ -152,7 +152,7 @@ docs/                  研究计划、组件接口和迁移说明
 - 本机 collector 从 `bridge.json` 读取平台及归属配置；模板见 [bridge.example.json](examples/bridge.example.json)，默认关闭平台采集。
 - stdio 适配器读取 `collector-state.json`，缺失、过期或来源不明时返回不可用。
 - 远端建议和进度读取需要 `remote.json`、`progress.json` 以及远端安装；字段见[组件说明](docs/components-guidance.md)。Windows 传输额外使用 `uv sync --extra windows`。
-- executor 和 acceptance 使用独立的显式配置与可信 peer 绑定；renewal 要求调用方显式注入 runner 和目标身份。
+- executor 和 acceptance 使用独立配置与可信 peer 绑定；原有 SCO 续起仍要求显式 runner／目标。**Linux／Docker 自动续起现已提供 CLI**：`research-hub renewal docker init/check/once/watch`，可在不依赖 SCO 的情况下，按次数预算和持久记录重启固定的已有故障容器。见[Docker 续起部署及边界](docs/docker-renewal.md)；它不负责重新申请云实例或延长 GPU 租约。
 
 迁移现有服务前请阅读[迁移说明](docs/code-organization.md)。本次整理版使用新的包入口和配置位置，原有现场部署仍使用原始文件布局。独立环境的验收结果见[真实链路验收记录](docs/live-validation-2026-10-24.md)。
 
@@ -165,7 +165,7 @@ uv run --no-editable pytest -q
 uv build --wheel
 ```
 
-CI 定义了 Python 3.11 / 3.12 的离线检查。跨平台服务部署、真实会话投递、GPU 执行和平台续建需要独立的环境验收。
+CI 定义了 Python 3.11 / 3.12 的离线检查，以及独立容器上的真实 Docker 续起测试。跨平台服务部署、真实会话投递、GPU 执行和平台续建需要独立的环境验收。
 
 ## 研究问题
 

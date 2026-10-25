@@ -1,5 +1,7 @@
 # Container renewal state machines
 
+For Linux/Docker, use the separate [Docker renewal CLI and backend](docker-renewal.md), which restarts one pinned existing failed container without SCO. The remainder of this page documents the original **SCO/ACP-specific guards**.
+
 This package preserves two related implementations from the local Container Renewal prototype. They solve different operations and are not competing versions of one executable:
 
 | Module | Operation | Durable record | Acceptance evidence |
@@ -13,7 +15,7 @@ Use one operation appropriate to the backend. The copy guard checks all tasks be
 
 The migrated library retains the lifecycle checks, explicit expiry attestations, durable intent before dispatch, exclusive local locks, no-resend handling after uncertain transport results, complete paginated task listing, template/profile checks, a generation limit, and sanitized error summaries. `run()` is a read-only check: it makes only `describe` and, for copying, `list` calls, and does not create a lock or ledger. Applying is an explicit library call, `run(apply=True)`, and still passes all policy checks.
 
-There is no installed renewal CLI, background scheduler, service definition or deployment wrapper. Both `Guard` constructors require an explicitly supplied runner; neither defaults to `subprocess.run`. Importing the package runs no remote command. No operational policy, ledger, task describe cache, authorization report or status receipt is included.
+For these legacy SCO guards there is no installed renewal CLI, background scheduler, service definition or deployment wrapper. Both `Guard` constructors require an explicitly supplied runner; neither defaults to `subprocess.run`. Importing the package runs no remote command. No operational policy, ledger, task describe cache, authorization report or status receipt is included.
 
 ## Explicit configuration
 

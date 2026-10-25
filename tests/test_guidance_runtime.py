@@ -92,6 +92,9 @@ class RuntimeTests(unittest.TestCase):
                 "research_hub.transports.ssh",
                 "research_hub.deployment.ssh",
                 "research_hub.deployment.ssh_remote",
+                "research_hub.renewal.restart",
+                "research_hub.renewal.docker",
+                "research_hub.renewal.cli",
             ):
                 importlib.reload(importlib.import_module(module))
 

@@ -51,11 +51,18 @@ def main(argv: list[str] | None = None) -> int:
     tunnel.add_argument("--prepare", action="store_true")
     tunnel.add_argument("--connect", action="store_true")
     sub.add_parser("ssh", help="deploy/check a standard OpenSSH target", add_help=False)
+    sub.add_parser(
+        "renewal", help="check/run a bounded Docker container restart guard", add_help=False
+    )
     incoming = list(argv) if argv is not None else __import__("sys").argv[1:]
     if incoming and incoming[0] == "ssh":
         from .deployment.ssh import main as ssh_main
 
         return ssh_main(incoming[1:])
+    if incoming and incoming[0] == "renewal":
+        from .renewal.cli import main as renewal_main
+
+        return renewal_main(incoming[1:])
     args = parser.parse_args(argv)
     if args.command == "demo":
         print(json.dumps(demo(), ensure_ascii=False, indent=2))

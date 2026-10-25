@@ -141,7 +141,7 @@ src/research_hub/       Installable modules; importing does not start services
 scripts/windows/       Runtime, client, scheduled-task, and operator scripts
 examples/              Synthetic traces and configuration templates
 schemas/               Original draft research-event schemas
-tests/                 Offline tests with isolated directories and fake transports
+tests/                 Offline checks and opt-in isolated SSH/Docker acceptance
 docs/                  Research plans, component interfaces, and migration notes
 ```
 
@@ -152,7 +152,7 @@ Runtime state and private configuration live in `RESEARCH_HUB_STATE_DIR`. The de
 - The local collector reads platform and ownership configuration from `bridge.json`. See [bridge.example.json](examples/bridge.example.json); platform collection is disabled by default.
 - The stdio adapter reads `collector-state.json` and reports unavailable when it is missing, stale, or has an unverified source.
 - Remote advisory delivery and progress reading require `remote.json`, `progress.json`, and a remote package installation. Fields are documented in [guidance and progress](docs/components-guidance.md). Windows transport additionally requires `uv sync --extra windows`.
-- Executor and acceptance use separate explicit configuration and trusted peer bindings. Renewal requires the caller to inject a runner and target identity explicitly.
+- Executor and acceptance use separate explicit configuration and trusted peer bindings. Legacy SCO renewal guards require an explicit runner/target. **Linux/Docker container renewal now has an operator CLI**: `research-hub renewal docker init/check/once/watch`. It can restart a pinned existing failed container with a durable attempt budget, without SCO. See [Docker renewal setup and limits](docs/docker-renewal.md); this does not provision cloud instances or renew GPU leases.
 
 Read the [migration notes](docs/code-organization.md) before migrating an existing service. This package uses new entry points and configuration locations; the original deployment still uses its original file layout. See the [live validation record](docs/live-validation-2026-10-24.md) for independent-environment acceptance results.
 
@@ -165,7 +165,7 @@ uv run --no-editable pytest -q
 uv build --wheel
 ```
 
-CI defines offline checks for Python 3.11 and 3.12. Cross-platform service deployment, delivery to real conversations, GPU execution, and platform instance renewal require separate environment acceptance.
+CI defines offline checks for Python 3.11 and 3.12 and an isolated real Docker renewal job. Cross-platform service deployment, delivery to real conversations, GPU execution, and platform instance renewal require separate environment acceptance.
 
 ## Research questions
 

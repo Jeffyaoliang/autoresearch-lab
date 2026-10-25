@@ -1,4 +1,4 @@
-name: Offline tests
+name: Tests
 on: [push, pull_request]
 jobs:
   test:
@@ -25,3 +25,17 @@ jobs:
           python-version: "3.12"
       - run: uv sync --locked --no-editable
       - run: uv run --no-editable pytest -q tests/test_windows_scripts.py tests/test_windows_pty.py tests/test_supervisor.py tests/test_tunnel.py
+
+  docker-renewal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --locked --no-editable
+      - run: docker --host unix:///var/run/docker.sock image pull busybox:1.37.0
+      - run: uv run --no-editable pytest -q -s tests/test_docker_live.py
+        env:
+          RESEARCH_HUB_TEST_DOCKER: "1"
