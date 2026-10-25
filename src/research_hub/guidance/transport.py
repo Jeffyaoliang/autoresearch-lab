@@ -1,4 +1,4 @@
-"""Optional Windows SCO/WinPTY adapter. Importing this module performs no I/O."""
+"""Fixed-target operator transport: OpenSSH or the legacy Windows SCO adapter."""
 
 import base64
 import json
@@ -25,6 +25,12 @@ AUTH_PROMPT = re.compile(
 
 def load_remote_config():
     data = read_config("remote.json")
+    if data.get("transport") == "ssh":
+        from research_hub.transports.ssh import validate_config
+
+        return validate_config(data)
+    if data.get("transport", "sco") != "sco":
+        raise ValueError("unsupported_remote_transport")
     for key in ("workspace_name", "task_name", "worker_name"):
         if not isinstance(data.get(key), str) or not IDENTIFIER.fullmatch(data[key]):
             raise ValueError("invalid_remote_config")
@@ -91,6 +97,12 @@ def spawn_sco_winpty(args):
 
 
 def run_remote(command, config):
+    if config.get("transport") == "ssh":
+        from research_hub.transports.ssh import run_remote as run_ssh
+
+        return run_ssh(command, config)
+    if config.get("transport", "sco") != "sco":
+        raise ValueError("unsupported_remote_transport")
     if os.name != "nt":
         raise ValueError("sco_pty_requires_windows")
     verify_remote(config)

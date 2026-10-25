@@ -1,0 +1,17 @@
+{
+  "transport": "ssh",
+  "ssh_host": "gpu-lab",
+  "expected_remote_user": "researcher",
+  "session_alias": "research_advisory",
+  "remote_root": "/home/researcher/research-hub-advisory",
+  "remote_python": "/home/researcher/research-hub-advisory/runtime/bin/python",
+  "remote_guidance_dir": "/home/researcher/research-hub-advisory/guidance",
+  "remote_state_dir": "/home/researcher/research-hub-advisory/state",
+  "bootstrap_python": "python3",
+  "binding": {
+    "session_alias": "research_advisory",
+    "session_id": "replace-with-existing-persisted-thread-id",
+    "cwd": "/home/researcher/project",
+    "codex_home": "/home/researcher/.codex"
+  }
+}

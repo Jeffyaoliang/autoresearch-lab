@@ -1,4 +1,4 @@
-"""Windows operator adapter and transparent, bounded remote manifest probe."""
+"""Fixed-target SSH/SCO adapter and bounded remote manifest probe."""
 
 import base64
 from datetime import datetime, timezone

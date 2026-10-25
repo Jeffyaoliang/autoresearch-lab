@@ -14,7 +14,9 @@ The primary route in our current deployment is **Codex on a Mac → SSH → Wind
 
 The collector and Windows remote transport rely on SCO commands, ACP task identities, and platform response formats. The documented live validation covers that environment; it does not establish compatibility with arbitrary GPU servers or other cloud providers.
 
-The durable mailbox, request deduplication, receipt handling, and Codex conversation integration can be reused. Accessing another provider or a standalone SSH server requires a suitable platform/transport adapter and separate validation. **A generic SSH server adapter is not currently included.** Windows is a choice in this deployment, not a requirement for every possible deployment.
+**A standard OpenSSH transport is now included** for a POSIX research host, without SCO or a Windows gateway. It supports isolated wheel deployment, fixed-session advisory delivery, reviewed progress reads, worker startup and a read-only doctor. Start with the [SSH setup guide](docs/ssh.md) and [example configuration](examples/ssh-deployment.example.json). The original SCO adapter remains available.
+
+SSH task listing does not impersonate the ACP collector: it explicitly reports `platform_task_listing_not_supported`. The SSH route passed real loopback SSH/install/MCP checks with a simulated Codex RPC endpoint; arbitrary cloud providers, Windows SSH clients and real GPU/Codex deployments still need their own acceptance. See [test scope](docs/ssh-validation-2026-10-26.md). Windows is a choice in our original deployment, not a requirement for this new route.
 
 ## Actual use and functional boundaries
 

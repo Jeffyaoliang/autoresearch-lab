@@ -14,7 +14,9 @@
 
 当前采集器和 Windows 远程传输依赖 SCO 命令、ACP 任务身份及平台响应格式。公开的真实验收覆盖的是这一环境，不代表已兼容任意 GPU 服务器或其他云平台。
 
-持久收件箱、请求去重、回执处理和 Codex 会话接入逻辑可以复用。换成其他云平台或普通 SSH 服务器，需要实现相应的平台／传输适配并重新验收。**仓库目前没有通用 SSH 服务器适配器。** Windows 是本次部署的选择，不是所有部署都必须经过的一层。
+**现已补充标准 OpenSSH 适配器**，可直接连接 POSIX 科研服务器，不依赖 SCO，也不要求 Windows 中转。包含独立 wheel 部署、固定会话建议投递、经审核的进度读取、worker 启动和只读 doctor 检查。见[SSH 部署指南](docs/ssh.md)及[配置示例](examples/ssh-deployment.example.json)。原有 SCO 适配器继续保留。
+
+SSH 模式的任务列表明确返回 `platform_task_listing_not_supported`，不会伪造 ACP 任务状态。新路径已通过真实本机 SSH、安装和 MCP 接口测试，Codex RPC 端使用测试替身；其他云平台、Windows SSH 客户端及真实 GPU／Codex 环境仍需各自验收。见[测试范围](docs/ssh-validation-2026-10-26.md)。Windows 是原现场的选择，不是新增路径的前提。
 
 ## 实际使用与功能边界
 

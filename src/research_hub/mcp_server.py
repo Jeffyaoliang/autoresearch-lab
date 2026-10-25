@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict
 from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 
-from .config import state_dir
+from .config import read_config, state_dir
 
 ROOT = state_dir()
 SNAPSHOT = ROOT / "collector-state.json"
@@ -68,10 +68,16 @@ class TaskStatus(BaseModel):
     available: bool
     queried_at: str
     observed_at: str | None = None
-    source: Literal["existing_SCO_ACP_collector_snapshot"] = "existing_SCO_ACP_collector_snapshot"
-    coverage: Literal["first_page_only_max_20"] = "first_page_only_max_20"
+    source: Literal["existing_SCO_ACP_collector_snapshot", "unavailable_for_ssh_transport"] = (
+        "existing_SCO_ACP_collector_snapshot"
+    )
+    coverage: Literal["first_page_only_max_20", "not_applicable"] = "first_page_only_max_20"
     reason: Literal[
-        "fresh_snapshot", "snapshot_unavailable", "snapshot_unverified", "snapshot_stale"
+        "fresh_snapshot",
+        "snapshot_unavailable",
+        "snapshot_unverified",
+        "snapshot_stale",
+        "platform_task_listing_not_supported",
     ]
     tasks: list[Task]
     resource_summary: ResourceSummary = ResourceSummary()
@@ -133,6 +139,19 @@ def project_snapshot(raw: bytes, clock: datetime) -> TaskStatus:
 
 def read_status() -> TaskStatus:
     clock = datetime.now(timezone.utc)
+    try:
+        remote = read_config("remote.json")
+    except ValueError:
+        remote = {}
+    if remote.get("transport") == "ssh":
+        return TaskStatus(
+            available=False,
+            queried_at=clock.isoformat(timespec="seconds"),
+            tasks=[],
+            reason="platform_task_listing_not_supported",
+            source="unavailable_for_ssh_transport",
+            coverage="not_applicable",
+        )
     try:
         # Fixed local file only, no argument-selected paths. Reject symlinks/reparse points.
         st = SNAPSHOT.lstat()
@@ -217,7 +236,7 @@ mcp = FastMCP("Research Hub")
     )
 )
 def list_research_tasks() -> TaskStatus:
-    """Read existing SCO ACP task aliases and platform states, with observation/query times. Freshness limit 180 seconds; first 20 owned tasks only. Resource details unavailable. No scientific results or logs."""
+    """Read existing SCO ACP task aliases and platform states. SSH deployments explicitly report platform_task_listing_not_supported; a reachable SSH host is not a running research task. Includes observation/query times. Freshness limit 180 seconds; first 20 owned tasks only. Resource details unavailable. No scientific results or logs."""
     return read_status()
 
 

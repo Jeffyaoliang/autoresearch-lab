@@ -88,6 +88,12 @@ class RuntimeTests(unittest.TestCase):
             for name in ["transport", "worker"]:
                 importlib.reload(importlib.import_module("research_hub.guidance." + name))
             importlib.reload(importlib.import_module("research_hub.progress.reader"))
+            for module in (
+                "research_hub.transports.ssh",
+                "research_hub.deployment.ssh",
+                "research_hub.deployment.ssh_remote",
+            ):
+                importlib.reload(importlib.import_module(module))
 
     def test_remote_owner_and_state_are_verified(self):
         config = {

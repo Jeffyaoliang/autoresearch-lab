@@ -37,7 +37,7 @@ Cloud-facing code calls `guidance.runtime.query_guidance({"operation": "status",
 
 The supplied Windows remote transport is a **SenseCore ACP adapter using SCO**, not a generic remote-server transport. It verifies platform-specific task ownership and state before invoking the SCO container entry point, and parses bounded platform responses. SCO itself is available for macOS, Windows, and Linux; the Windows gateway reflects this deployment's availability needs, not a universal host requirement. See the [official SCO overview](https://www.sensecore.cn/help/docs/CLI/Introduction).
 
-Mailbox durability, deduplication, delivery receipts, and the Codex RPC integration are reusable. Another cloud platform or a standalone SSH server needs a suitable adapter and separate acceptance checks. This package does not currently include a generic SSH transport adapter.
+A standard OpenSSH adapter is also included for POSIX targets. Guidance and reviewed progress select it with `transport: "ssh"` in the local `remote.json`; absent `transport` preserves legacy SCO behavior. It checks host keys and the expected OS account, uses noninteractive key/agent authentication, and bounds responses/timeouts. The operator CLI can deploy a wheel, start the advisory worker and check its fixed thread/socket. See [SSH setup and limitations](ssh.md). Platform task listing remains SCO-only and returns an explicit unsupported result on SSH deployments. Separate live target acceptance is still required.
 
 ## Optional Windows SCO transport
 

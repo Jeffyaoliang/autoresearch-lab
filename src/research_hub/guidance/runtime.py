@@ -29,6 +29,7 @@ ENV_ALLOW = {
     "HOMEDRIVE",
     "HOMEPATH",
     "HOME",
+    "SSH_AUTH_SOCK",
     "LANG",
     "PYTHONPATH",
     "RESEARCH_HUB_STATE_DIR",
