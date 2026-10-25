@@ -33,6 +33,12 @@ The delivery component persists a target fingerprint in `delivery-binding.json`.
 
 Cloud-facing code calls `guidance.runtime.query_guidance({"operation": "status", "request_id": "example01"})`. Submit also requires `message`. Request IDs are 8–64 ASCII letters/digits/underscores/hyphens, beginning with a letter or digit. Reusing an ID with different text is rejected. Messages are capped at 2,000 characters and 8,000 UTF-8 bytes; likely secrets and control characters are rejected. Mailbox bodies, claims, and receipts remain private state, outside the installed source tree.
 
+## Platform scope
+
+The supplied Windows remote transport is a **SenseCore ACP adapter using SCO**, not a generic remote-server transport. It verifies platform-specific task ownership and state before invoking the SCO container entry point, and parses bounded platform responses. SCO itself is available for macOS, Windows, and Linux; the Windows gateway reflects this deployment's availability needs, not a universal host requirement. See the [official SCO overview](https://www.sensecore.cn/help/docs/CLI/Introduction).
+
+Mailbox durability, deduplication, delivery receipts, and the Codex RPC integration are reusable. Another cloud platform or a standalone SSH server needs a suitable adapter and separate acceptance checks. This package does not currently include a generic SSH transport adapter.
+
 ## Optional Windows SCO transport
 
 Both the guidance transport and progress reader use local `state_dir()/remote.json`. Required fields are explicit; no account, task, workspace, executable, or remote path defaults to an original deployment:

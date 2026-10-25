@@ -8,6 +8,14 @@
 
 **项目状态：早期研究。** 这里包含从 Research Hub 私有原型整理出的 Python 包、离线测试和研究计划。包内的合成演示与测试用于验证软件行为；真实 GPU Campaign 和科研效果仍需单独验证。
 
+## 支持的平台与可迁移范围
+
+**当前真实平台适配面向 SenseCore ACP，使用 SCO。** SCO 是 SenseCore 专用的命令行工具，不是通用 SSH 客户端，也不是所有 GPU 服务器都会提供的工具。它支持安装在 macOS、Windows 和 Linux 上；我们选择 Windows 作为常在线的接入机器。见 [SCO 官方说明](https://www.sensecore.cn/help/docs/CLI/Introduction)。
+
+当前采集器和 Windows 远程传输依赖 SCO 命令、ACP 任务身份及平台响应格式。公开的真实验收覆盖的是这一环境，不代表已兼容任意 GPU 服务器或其他云平台。
+
+持久收件箱、请求去重、回执处理和 Codex 会话接入逻辑可以复用。换成其他云平台或普通 SSH 服务器，需要实现相应的平台／传输适配并重新验收。**仓库目前没有通用 SSH 服务器适配器。** Windows 是本次部署的选择，不是所有部署都必须经过的一层。
+
 ## 实际使用与功能边界
 
 目前日常主入口是 **Mac Codex → SSH → Windows → SCO → 研究容器**。进入容器后有两类不同的操作：

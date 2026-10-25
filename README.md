@@ -8,6 +8,14 @@ The primary route in our current deployment is **Codex on a Mac → SSH → Wind
 
 **Project status: early research.** This repository contains a Python package extracted from a private Research Hub prototype, offline tests, and research plans. Synthetic demos and tests verify software behavior; real GPU campaigns and research outcomes require separate validation.
 
+## Supported platform and portability
+
+**The current live platform adapter targets SenseCore ACP through SCO.** SCO is SenseCore's platform-specific CLI, not a general-purpose SSH client or a tool provided by every GPU server. It can be installed on macOS, Windows, or Linux; our deployment uses Windows as the always-online gateway. See the [official SCO documentation](https://www.sensecore.cn/help/docs/CLI/Introduction).
+
+The collector and Windows remote transport rely on SCO commands, ACP task identities, and platform response formats. The documented live validation covers that environment; it does not establish compatibility with arbitrary GPU servers or other cloud providers.
+
+The durable mailbox, request deduplication, receipt handling, and Codex conversation integration can be reused. Accessing another provider or a standalone SSH server requires a suitable platform/transport adapter and separate validation. **A generic SSH server adapter is not currently included.** Windows is a choice in this deployment, not a requirement for every possible deployment.
+
 ## Actual use and functional boundaries
 
 Our main daily entry point is **Mac Codex → SSH → Windows → SCO → the research container**. Once inside the container, operations take two distinct forms:

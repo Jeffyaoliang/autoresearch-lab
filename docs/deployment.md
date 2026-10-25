@@ -1,6 +1,14 @@
-# 现用部署链路的通用化脚本
+# 部署脚本与平台依赖
 
 这些脚本从现有 Research Agent Hub 部署整理而来，改用包入口和仓库外的显式配置。它们覆盖 Windows 采集守护、计划任务，以及 OpenAI 官方 Tunnel 客户端的安装和前台启动。安装脚本位于仓库和源码包的 `scripts/windows/`；Python 入口包含在 wheel 中。
+
+## 平台前提与迁移边界
+
+本文描述的是 **SCO / SenseCore ACP 环境中的现有部署**。SCO 是 SenseCore 平台专用 CLI，不是任意服务器通用的连接工具；官方提供 macOS、Windows 和 Linux 安装方式，见 [SCO 功能与安装说明](https://www.sensecore.cn/help/docs/CLI/Introduction)。这里使用 Windows，是因为该机器可以常在线。
+
+采集器和远程传输需要平台提供相应的 `sco acp jobs` 查询与容器访问能力，并依赖经过核验的任务归属、状态及输出格式。安装本包不会让其他云平台或普通 SSH 服务器具备 SCO 接口，也不能仅修改可执行文件路径就视为完成迁移。
+
+其他环境可以复用收件箱、去重、回执和 Codex RPC 逻辑，但需要另接平台／传输适配层，配置可信目标身份，并分别验收查询、投递及故障行为。仓库当前不提供通用 SSH 服务器适配器；本文中的 Windows → SCO → 容器步骤不能直接照搬到所有 GPU 服务器。
 
 ## 机器分工与连接路径
 
