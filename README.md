@@ -6,6 +6,17 @@
 
 **项目状态：早期研究。** 这里包含从 Research Hub 私有原型整理出的 Python 包、离线测试和研究计划。包内的合成演示与测试用于验证软件行为；真实 GPU Campaign 和科研效果仍需单独验证。
 
+## 实际使用与功能边界
+
+目前日常主入口是 **Mac Codex → SSH → Windows → SCO → 研究容器**。进入容器后有两类不同的操作：
+
+1. **直接执行 Shell / Python**：安装依赖、修改文件、查询日志、运行测试或实验脚本。这些操作不一定经过服务器上的 Codex，不能全部算作服务器 Agent 自主完成。
+2. **启动服务器 Codex 的工作回合**：现场控制程序把任务写成 prompt，通过 Codex App Server 的 `turn/start` 提交，由服务器 Codex 在配置的工具权限与预算内继续工作。这是另一条执行入口，不是 MCP 建议投递 worker 的行为。
+
+Research Hub 的 ChatGPT MCP 入口已经完成查询、建议投递和回执验收，但目前不是日常主入口。它通过 `thread/inject_items` 加入固定会话上下文，不调用 `turn/start`；“已送达”不表示已经执行、完成实验或取得科研结果。
+
+Codex、SSH 和 SCO 是已有工具；我们编写的是围绕具体环境的采集、适配、投递和流程控制代码。测试证明所覆盖的软件行为可用，不证明日常使用占比或科研效率收益；目前没有这两项的量化统计。
+
 ## Mac、Windows 和远程服务器如何分工
 
 | 位置 | 当前部署中的职责 |
@@ -46,8 +57,10 @@ flowchart TB
         serverCodex["服务器上的 Codex 会话"]
         workspace["研究代码、数据与实验记录"]
 
-        container -->|"按具体操作交互"| serverCodex
-        container -->|"查询 / 读写"| workspace
+        control["现场控制程序：携带任务 prompt"]
+        container -->|"交给远端 Codex"| control
+        control -->|"App Server turn/start"| serverCodex
+        container -->|"直接 Shell / Python 操作"| workspace
     end
 
     researcher --> macCodex

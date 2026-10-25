@@ -2,6 +2,12 @@
 
 These modules were extracted from the working Research Hub integration. Importing them does not query a server, create state directories, import WinPTY, or start a worker. The examples below contain placeholders; they do not configure a real deployment.
 
+## How this relates to daily operation
+
+The primary daily route is Mac Codex → SSH → Windows → SCO → the research container. Container access can execute Shell/Python directly, or invoke a separate deployment controller that submits a task prompt with Codex App Server `turn/start`. Direct remote commands are not evidence that the server-side Codex agent performed the work.
+
+The Research Hub MCP adapter is an additional, tested interface, not the main daily entry point. Its advisory worker only injects context with `thread/inject_items`. The deployment controller's ability to start a model turn must not be attributed to that advisory interface. Existing Codex, SSH and SCO provide the underlying capabilities; this project adds environment-specific integration. No measured usage split or research-productivity gain is claimed.
+
 ## Advisory delivery
 
 The four cloud-facing tools (`list_research_tasks`, `get_research_progress`, `submit_research_guidance`, and `get_research_guidance_status`) are exposed by `research-hub stdio`. The `research-hub http` command serves a different, read-only Bridge and does not expose advisory submission. The existing deployment uses the official OpenAI tunnel-client to forward requests to the stdio adapter over an outbound connection. Generic versions of its installation, collector supervision, scheduled task and operator launcher are included; see [deployment](deployment.md). The remote package, worker, private configuration, existing Tunnel and ChatGPT connection still need to be configured for each deployment. Experimental TLS relays are separate from this MCP Tunnel path and remain excluded. An independently installed public package passed live Windows/remote-server stdio query, advisory injection and receipt checks on 2026-10-24. The existing deployment was not replaced; the initial cloud Tunnel probe returned HTTP 429. A later recovery passed a live cloud query against the existing deployment, which still uses its original adapter. A 24-hour installed-package soak is in progress, not yet accepted. See [validation scope](live-validation-2026-10-24.md).
